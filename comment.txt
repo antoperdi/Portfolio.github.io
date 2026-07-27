@@ -181,4 +181,7 @@ III. RIWAYAT PERUBAHAN & PENAMBAHAN FITUR
 3. Perubahan Ikon Sosial Media (index.html):
    - Mengganti visualisasi ikon SVG pada link Instagram dan YouTube dengan elemen `<img>` yang memuat berkas gambar PNG lokal masing-masing ('foto_pribadi/instagram.png' dan 'foto_pribadi/youtube.png').
    - Mengatur dimensi gambar ke 20x20 piksel dengan properti `object-fit: contain` untuk menyelaraskan dengan ukuran ikon tombol lingkaran lainnya.
+4. Pembaruan Dokumentasi Repositori (README.md):
+   - Menulis ulang berkas README.md dengan menambahkan deskripsi proyek, fitur-fitur, teknologi stack, struktur direktori, serta galeri tangkapan layar (Visual Showcase) dari semua halaman web portofolio.
+   - Menyertakan rujukan berkas gambar screenshot beranda dan detail proyek yang disimpan di folder 'foto_pribadi/'.
 ========================================================================
