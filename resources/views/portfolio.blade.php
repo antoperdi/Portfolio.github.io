@@ -49,7 +49,7 @@
       <div class="container hero-content">
         <div class="hero-text">
           <span class="hero-greeting">Selamat Datang Di Portfolio Saya</span>
-          <h1 class="hero-title">Halo, Saya<br>Rakhmat Perdianto</h1>
+          <h1 class="hero-title">Halo, Saya<br>{{ html_escape($profile->name) }}</h1>
 
           <div class="hero-type-wrapper">
             <span class="typewriter"></span>
@@ -76,7 +76,7 @@
         <div class="hero-image-container">
           <div class="hero-image-wrapper">
             <!-- Foto Pribadi Utama -->
-            <img src="{{ asset('foto_pribadi/2211500030.jpg') }}" alt="Rakhmat Perdianto - Foto Utama" class="hero-image" loading="eager">
+            <img src="{{ url('/profile/image/hero') }}" alt="{{ html_escape($profile->name) }} - Foto Utama" class="hero-image" loading="eager">
           </div>
           <div class="hero-image-card-accent"></div>
         </div>
@@ -93,29 +93,17 @@
         <div class="about-grid">
           <div class="about-img-wrapper">
             <!-- Foto Pribadi Pendukung 1 -->
-            <img src="{{ asset('foto_pribadi/IMG_20250803_075342_629.webp') }}" alt="Rakhmat Perdianto - Foto Tentang Saya"
+            <img src="{{ url('/profile/image/about') }}" alt="{{ html_escape($profile->name) }} - Foto Tentang Saya"
               class="about-image" loading="lazy">
           </div>
 
           <div class="about-details">
             <p class="about-desc">
-              Saya adalah Full Stack Web Developer dan IT Support Specialist yang memiliki passion besar dalam
-              memecahkan masalah kompleks melalui kode yang bersih dan terstruktur.
-
-              Spesialisasi utama saya berfokus pada pengembangan backend menggunakan PHP (Laravel & CodeIgniter) dengan
-              basis data MySQL, serta pembuatan antarmuka frontend yang responsif dan estetis menggunakan JavaScript,
-              Tailwind CSS, dan Bootstrap.
-
-              Dengan menggabungkan logika backend yang tangguh dan desain frontend yang intuitif, saya memastikan setiap
-              aplikasi web yang dibangun memiliki performa cepat, aman, dan mudah digunakan. Sebagai seorang fast
-              learner yang adaptif, saya selalu antusias menguasai teknologi baru dan menerapkan standar arsitektur Clean Code.
-            </p>
-            <p class="about-desc">
-              Selalu bersemangat mempelajari teknologi baru dan mengimplementasikan standar keamanan web terbaik serta
-              arsitektur yang patuh pada prinsip Clean Code.
+              {{ html_escape($profile->bio) }}
             </p>
 
             <div class="info-cards">
+              @foreach($educations as $edu)
               <div class="info-card">
                 <div class="info-card-icon">
                   <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -125,7 +113,7 @@
                   </svg>
                 </div>
                 <h4>Pendidikan</h4>
-                <p>Sarjana Teknik Informatika<br>Institut Sains dan Bisnis Atma Luhur</p>
+                <p>{{ html_escape($edu->degree) }} {{ html_escape($edu->major) }}<br>{{ html_escape($edu->institution) }} ({{ html_escape($edu->period) }})</p>
                 <div class="card-action-links">
                   <a href="https://www.atmaluhur.ac.id/" target="_blank" rel="noopener" class="btn-card-action">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -138,17 +126,9 @@
                     </svg>
                     Web Kampus
                   </a>
-                  <a href="https://maps.app.goo.gl/hJBB8g4uRp77BDDi9?g_st=ac" target="_blank" rel="noopener"
-                    class="btn-card-action">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                      stroke-linecap="round" stroke-linejoin="round">
-                      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                      <circle cx="12" cy="10" r="3"></circle>
-                    </svg>
-                    Google Maps
-                  </a>
                 </div>
               </div>
+              @endforeach
             </div>
           </div>
         </div>
@@ -171,43 +151,16 @@
               </tr>
             </thead>
             <tbody>
+              @foreach($groupedSkills as $category => $skillNames)
               <tr>
-                <td class="skill-category">Languages</td>
+                <td class="skill-category">{{ html_escape($category) }}</td>
                 <td class="skill-tools">
-                  <span class="skill-badge">PHP</span>
-                  <span class="skill-badge">JavaScript (ES6+)</span>
-                  <span class="skill-badge">HTML5</span>
-                  <span class="skill-badge">CSS3</span>
+                  @foreach($skillNames as $name)
+                  <span class="skill-badge">{{ html_escape($name) }}</span>
+                  @endforeach
                 </td>
               </tr>
-              <tr>
-                <td class="skill-category">Frameworks</td>
-                <td class="skill-tools">
-                  <span class="skill-badge">Laravel 12</span>
-                  <span class="skill-badge">CodeIgniter</span>
-                </td>
-              </tr>
-              <tr>
-                <td class="skill-category">Styling</td>
-                <td class="skill-tools">
-                  <span class="skill-badge">Tailwind CSS</span>
-                  <span class="skill-badge">Bootstrap</span>
-                </td>
-              </tr>
-              <tr>
-                <td class="skill-category">Database</td>
-                <td class="skill-tools">
-                  <span class="skill-badge">MySQL</span>
-                </td>
-              </tr>
-              <tr>
-                <td class="skill-category">IT & Support</td>
-                <td class="skill-tools">
-                  <span class="skill-badge">System Optimization</span>
-                  <span class="skill-badge">Network & Infrastructure Support</span>
-                  <span class="skill-badge">Troubleshooting</span>
-                </td>
-              </tr>
+              @endforeach
             </tbody>
           </table>
         </div>
@@ -218,45 +171,17 @@
           Tingkat Penguasaan &amp; Kemampuan</h3>
 
         <div class="skills-progress-grid">
+          @foreach($skills as $skill)
           <div class="skill-item">
             <div class="skill-info">
-              <span>Frontend Development (HTML, CSS, JS, Tailwind)</span>
-              <span>90%</span>
+              <span>{{ html_escape($skill->name) }}</span>
+              <span>{{ html_escape($skill->percentage) }}%</span>
             </div>
             <div class="skill-bar">
-              <div class="skill-progress" data-width="90%"></div>
+              <div class="skill-progress" data-width="{{ html_escape($skill->percentage) }}%"></div>
             </div>
           </div>
-
-          <div class="skill-item">
-            <div class="skill-info">
-              <span>Backend Development (PHP, Laravel, CodeIgniter)</span>
-              <span>85%</span>
-            </div>
-            <div class="skill-bar">
-              <div class="skill-progress" data-width="85%"></div>
-            </div>
-          </div>
-
-          <div class="skill-item">
-            <div class="skill-info">
-              <span>Database Management (MySQL)</span>
-              <span>85%</span>
-            </div>
-            <div class="skill-bar">
-              <div class="skill-progress" data-width="85%"></div>
-            </div>
-          </div>
-
-          <div class="skill-item">
-            <div class="skill-info">
-              <span>IT Support, Network &amp; Infrastructure Support</span>
-              <span>90%</span>
-            </div>
-            <div class="skill-bar">
-              <div class="skill-progress" data-width="90%"></div>
-            </div>
-          </div>
+          @endforeach
         </div>
       </div>
     </section>
@@ -339,32 +264,42 @@
     <section id="gallery" class="section">
       <div class="container">
         <h2 class="section-title">Galeri Aktivitas</h2>
-
+ 
         <div class="gallery-grid-wrapper">
           <div class="gallery-grid">
-            <!-- Galeri 1 -->
-            <div class="gallery-item">
-              <img src="{{ asset('foto_pribadi/IMG_20250705_055235_450.webp') }}" alt="Fokus Kerja di Ruang Kreatif" class="gallery-img" loading="lazy">
-              <div class="gallery-overlay">
-                <p>Fokus Kerja di Ruang Kreatif</p>
+            @forelse($galleries as $item)
+              <!-- Gambar Galeri Dinamis dari Database -->
+              <div class="gallery-item">
+                <img src="{{ url('/gallery/image/' . $item->id) }}" alt="{{ html_escape($item->name) }}" class="gallery-img" loading="lazy">
+                <div class="gallery-overlay">
+                  <p>{{ html_escape($item->name) }}</p>
+                </div>
               </div>
-            </div>
-
-            <!-- Galeri 2 -->
-            <div class="gallery-item">
-              <img src="{{ asset('foto_pribadi/IMG_20260226_045149_015.webp') }}" alt="Menyusun Konsep Desain Antarmuka" class="gallery-img" loading="lazy">
-              <div class="gallery-overlay">
-                <p>Menyusun Konsep Desain Antarmuka</p>
+            @empty
+              <!-- Galeri 1 Fallback -->
+              <div class="gallery-item">
+                <img src="{{ asset('foto_pribadi/IMG_20250705_055235_450.webp') }}" alt="Fokus Kerja di Ruang Kreatif" class="gallery-img" loading="lazy">
+                <div class="gallery-overlay">
+                  <p>Fokus Kerja di Ruang Kreatif</p>
+                </div>
               </div>
-            </div>
-
-            <!-- Galeri 3 -->
-            <div class="gallery-item">
-              <img src="{{ asset('foto_pribadi/IMG_20260315_021228_744.webp') }}" alt="Eksperimen Pemrograman Berkelanjutan" class="gallery-img" loading="lazy">
-              <div class="gallery-overlay">
-                <p>Eksperimen Pemrograman Berkelanjutan</p>
+ 
+              <!-- Galeri 2 Fallback -->
+              <div class="gallery-item">
+                <img src="{{ asset('foto_pribadi/IMG_20260226_045149_015.webp') }}" alt="Menyusun Konsep Desain Antarmuka" class="gallery-img" loading="lazy">
+                <div class="gallery-overlay">
+                  <p>Menyusun Konsep Desain Antarmuka</p>
+                </div>
               </div>
-            </div>
+ 
+              <!-- Galeri 3 Fallback -->
+              <div class="gallery-item">
+                <img src="{{ asset('foto_pribadi/IMG_20260315_021228_744.webp') }}" alt="Eksperimen Pemrograman Berkelanjutan" class="gallery-img" loading="lazy">
+                <div class="gallery-overlay">
+                  <p>Eksperimen Pemrograman Berkelanjutan</p>
+                </div>
+              </div>
+            @endforelse
           </div>
         </div>
       </div>
@@ -388,9 +323,9 @@
               <div class="contact-detail-item">
                 <img src="{{ asset('foto_pribadi/email.png') }}" alt="Email" width="20" height="20" style="object-fit: contain;">
                 <div class="contact-detail-text">
-                  <a href="mailto:rakhmatperdianto@gmail.com" class="contact-detail-text">
+                  <a href="mailto:{{ html_escape($profile->email) }}" class="contact-detail-text">
                     <h5>E-mail Saya</h5>
-                    <p>rakhmatperdianto@gmail.com</p>
+                    <p>{{ html_escape($profile->email) }}</p>
                   </a>
                 </div>
               </div>
@@ -402,7 +337,7 @@
                 <div class="location-links">
                   <a href="https://maps.app.goo.gl/MPfGCjgRLdBZgHBcA?g_st=ac" class="contact-detail-text">
                     <h5>Lokasi</h5>
-                    <p>Bangka Belitung, Pangkalpinang, Indonesia</p>
+                    <p>{{ html_escape($profile->address) }}</p>
                   </a>
                 </div>
               </div>

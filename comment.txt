@@ -215,7 +215,23 @@ IV. PENAMAAN BLOK KODE BACKEND ADMIN (LARAVEL 12)
    - AdminUserSeeder : Kelas seeder database untuk akun admin awal.
    - run() : Fungsi utama pengisi baris data admin, melakukan hash password dengan bcrypt, dan menyimpannya ke tabel 'users'.
 
-5. Skema Kolom Tabel Database MySQL (Tabel: users & profile):
+5. Model Profil Kustom (app/Models/Profile.php):
+   - Profile : Kelas Model Eloquent representasi tabel 'profile' MySQL.
+   - $table : Variabel penentu nama tabel di MySQL ('profile').
+   - $fillable : Array kolom yang dapat ditulis ('name', 'title', 'bio', 'email', 'phone', 'address', 'profile_pic', 'hero_image_blob', 'hero_image_mime', 'about_image_blob', 'about_image_mime').
+   - $timestamps : Dinonaktifkan (false) karena dikelola otomatis oleh trigger MySQL.
+
+6. Controller Panel Admin (app/Http/Controllers/AdminController.php):
+   - AdminController : Kelas Controller utama untuk panel pengelolaan dashboard admin.
+   - index() : Fungsi penghitung statistik data dari MySQL dan penampil halaman utama dashboard admin ('admin.dashboard').
+   - showUbahGambar() : Fungsi penampil halaman form "Ubah & Tambah Gambar" ('admin.ubah_gambar').
+   - uploadGambar() : Fungsi pemroses unggahan gambar (maksimal 5MB) dan penyimpan data biner secara asinkron ke database MySQL.
+
+7. Controller Portfolio Utama (app/Http/Controllers/PortfolioController.php):
+   - PortfolioController : Kelas Controller utama penampil halaman beranda depan portfolio.
+   - index() : Fungsi penarik seluruh data profil, keahlian, pendidikan, dan pengalaman dari database MySQL untuk dirender ke view 'portfolio.blade.php'.
+
+8. Skema Kolom Tabel Database MySQL (Tabel: users & profile):
    - Tabel 'users' (Tabel Autentikasi Admin):
      * id : Kolom ID unik, tipe integer, Primary Key, Auto-increment.
      * username : Kolom username pengenal admin, tipe varchar(50), Unique Key.
@@ -232,5 +248,98 @@ IV. PENAMAAN BLOK KODE BACKEND ADMIN (LARAVEL 12)
      * address : Kolom alamat domisili lengkap, tipe text.
      * profile_pic : Kolom nama berkas gambar foto profil, tipe varchar(255).
      * updated_at : Kolom penanda pembaruan data otomatis, tipe timestamp.
+     * hero_image_blob : Kolom penyimpanan data biner foto profil utama, tipe longblob.
+     * hero_image_mime : Kolom tipe format berkas foto profil, tipe varchar(50).
+     * about_image_blob : Kolom penyimpanan data biner foto tentang saya, tipe longblob.
+     * about_image_mime : Kolom tipe format berkas foto tentang saya, tipe varchar(50).
 
+========================================================================
+
+========================================================================
+V. PERBAIKAN BUG DASHBOARD ADMIN (2026-07-28)
+========================================================================
+1. routes/web.php:
+   - Menambahkan pengelompokan rute (Route::middleware(['auth'])->group(...)) untuk melindungi rute internal panel admin (dashboard, ubah-gambar, upload, logout) agar hanya bisa diakses setelah login.
+2. app/Http/Controllers/AdminController.php:
+   - Menghapus method __construct() yang mendefinisikan `$this->middleware('auth')` karena method `middleware()` tidak didukung secara default pada base Controller Laravel 11. Proteksi dipindahkan sepenuhnya ke file routing (web.php).
+3. bootstrap/app.php:
+   - Mengonfigurasi method `redirectTo` pada callback `withMiddleware` guna mengalihkan user tamu (guest) secara otomatis ke `/portal-admin` (halaman login admin) jika mencoba mengakses rute yang dilindungi tanpa sesi aktif.
+========================================================================
+
+========================================================================
+VI. INTEGRASI TABEL gallery_me UNTUK GALERI AKTIVITAS (2026-07-28)
+========================================================================
+1. Model Galeri (app/Models/GalleryMe.php):
+   - GalleryMe : Kelas Model Eloquent representasi tabel 'gallery_me' MySQL.
+   - $table : Variabel penentu nama tabel di MySQL ('gallery_me').
+   - $fillable : Array kolom yang dapat ditulis ('gallery', 'name', 'created_at').
+   - $timestamps : Dinonaktifkan (false) karena dikelola secara manual.
+
+2. Skema Kolom Tabel Database MySQL (Tabel: gallery_me):
+   - id : Kolom ID gambar, tipe integer, Primary Key, Auto-increment.
+   - gallery : Kolom penyimpanan data biner file foto galeri, tipe blob.
+   - name : Kolom penampung nama file gambar asli, tipe varchar(100).
+   - created_at : Kolom penanda waktu pembuatan/unggahan, tipe timestamp.
+
+3. Rute Baru (routes/web.php):
+   - Route::get('/gallery/image/{id}') : Rute penyajian gambar biner galeri secara langsung dari database MySQL ke client.
+   - Route::post('/ubah-gambar/upload-gallery') : Rute penanganan unggah gambar baru ke galeri via AJAX POST (dilindungi rate-limiter & auth).
+   - Route::delete('/ubah-gambar/delete-gallery/{id}') : Rute penghapusan gambar dari galeri via AJAX DELETE (dilindungi auth).
+
+4. Controller Admin & Portfolio (app/Http/Controllers/):
+   - AdminController.php:
+     * showUbahGambar() : Ditambahkan pengambilan seluruh data `GalleryMe::all()` untuk dilempar ke view 'admin.ubah_gambar'.
+     * uploadGallery() : Validasi input gambar (maksimal 5MB), pembacaan biner file via file_get_contents(), dan penyimpanan ke tabel 'gallery_me'.
+     * deleteGallery() : Pengecekan data dan penghapusan baris galeri berdasarkan ID.
+   - PortfolioController.php:
+     * index() : Mengambil data dari tabel 'gallery_me' dan mengirimkannya sebagai variabel $galleries ke view 'portfolio.blade.php'.
+     * serveGalleryImage() : Mengambil biner gambar galeri dari database dan mengembalikannya dengan Header Content-Type image/jpeg.
+
+5. File View Blade (resources/views/):
+   - admin/ubah_gambar.blade.php:
+     * Menambahkan kartu panel manajemen galeri aktivitas dengan form pengunggahan file dan grid penampil koleksi gambar dari database.
+     * Integrasi JavaScript/jQuery AJAX asinkron untuk menambahkan (upload) dan menghapus (delete) gambar dengan efek transisi DOM tanpa reload.
+   - portfolio.blade.php:
+     * Merubah struktur statis bagian gallery agar memproses data @forelse($galleries as $item) secara dinamis dari database, dengan fallback gambar statis lokal jika tabel 'gallery_me' kosong.
+========================================================================
+
+========================================================================
+VII. INTEGRASI TABEL BARU projects_gallery UNTUK GALERI PROYEK (2026-07-28)
+========================================================================
+1. Model Galeri Proyek (app/Models/ProjectsGallery.php):
+   - ProjectsGallery : Kelas Model Eloquent representasi tabel 'projects_gallery' MySQL.
+   - $table : Variabel penentu nama tabel di MySQL ('projects_gallery').
+   - $fillable : Array kolom yang dapat ditulis ('gallery', 'name', 'created_at').
+   - $timestamps : Dinonaktifkan (false) karena dikelola secara otomatis oleh MySQL.
+
+2. Skema Kolom Tabel Database MySQL (Tabel: projects_gallery):
+   - id : Kolom ID gambar proyek, tipe integer, Primary Key, Auto-increment.
+   - gallery : Kolom penyimpanan data biner file foto galeri proyek, tipe blob.
+   - name : Kolom penampung nama file gambar asli, tipe varchar(100).
+   - created_at : Kolom penanda waktu pembuatan/unggahan, tipe timestamp (DEFAULT CURRENT_TIMESTAMP).
+
+3. Rute Baru (routes/web.php):
+   - Route::get('/projects-gallery/image/{id}') : Rute penyajian gambar biner galeri proyek dari database ke client.
+   - Route::post('/ubah-gambar/upload-projects-gallery') : Rute penanganan unggah gambar galeri proyek via AJAX POST.
+   - Route::delete('/ubah-gambar/delete-projects-gallery/{id}') : Rute penghapusan gambar galeri proyek via AJAX DELETE.
+
+4. Controller Admin & Portfolio (app/Http/Controllers/):
+   - AdminController.php:
+     * showUbahGambar() : Mengambil data `ProjectsGallery::all()` sebagai $projectsGalleries.
+     * uploadProjectsGallery() : Validasi masukan gambar (maks 5MB) dan penyimpanan data biner ke 'projects_gallery'.
+     * deleteProjectsGallery() : Menghapus baris galeri proyek berdasarkan ID.
+   - PortfolioController.php:
+     * index() : Mengambil data dari tabel 'projects_gallery' dan mengirimkannya sebagai $projectsGalleries.
+     * serveProjectsGalleryImage() : Menyajikan data biner dari tabel 'projects_gallery'.
+
+5. File View Blade (resources/views/):
+   - admin/ubah_gambar.blade.php:
+     * Menambahkan kartu panel manajemen galeri proyek dengan form pengunggahan file dan grid penampil koleksi gambar dari database `projects_gallery`.
+     * Menambahkan skrip JavaScript/jQuery AJAX asinkron untuk menambahkan dan menghapus gambar galeri proyek tanpa reload.
+========================================================================
+VIII. DOKUMENTASI LENGKAP ARSITEKTUR & MEKANISME KERJA FITUR MVC (2026-07-28)
+========================================================================
+1. DOKUMENTASI_FITUR_MVC.md:
+   - Dibuat berkas dokumentasi independen 'DOKUMENTASI_FITUR_MVC.md' pada direktori utama proyek.
+   - Berisi rincian fungsi seluruh Controller (AdminController, AuthController, PortfolioController), Model (User, Profile, GalleryMe, ProjectsGallery), View Blade (portfolio, layout, login, dashboard, ubah_gambar), serta Diagram Sequence dan penjelasan langkah demi langkah Mekanisme Kerja Fitur MVC.
 ========================================================================
