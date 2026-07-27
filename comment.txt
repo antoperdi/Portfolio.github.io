@@ -1,0 +1,184 @@
+========================================================================
+DOKUMENTASI PENAMAAN & KOMENTAR KODE PORTFOLIO WEB
+========================================================================
+
+Dokumentasi ini mencatat semua penamaan elemen HTML (Class/ID), properti CSS,
+serta variabel dan fungsi JavaScript yang digunakan dalam proyek Portfolio Web.
+Pencatatan ini dilakukan demi transparansi perubahan dan kemudahan perawatan kode.
+
+------------------------------------------------------------------------
+I. PENAMAAN KELAS & ID (HTML & CSS)
+------------------------------------------------------------------------
+1. Variabel CSS (Root):
+   - --primary : Warna dominan latar belakang dan tema utama (#293681).
+   - --secondary : Warna aksen sekunder untuk tombol dan sorotan (#4274D9).
+   - --accent : Warna aksen terang untuk elemen kecil, progress bar, dan hover (#95CCDD).
+   - --light : Warna abu-abu kebiruan terang untuk latar belakang alternatif (#D0E7E6).
+   - --white : Warna putih bersih untuk teks kontras (#ffffff).
+   - --dark-blue : Warna biru tua sangat gelap untuk teks pada latar belakang terang (#12183a).
+   - --card-bg : Warna latar kartu semi transparan untuk efek glassmorphism.
+   - --font-main : Font utama menggunakan Google Fonts 'Outfit' atau sans-serif cadangan.
+
+2. Struktur Navigasi (Navbar):
+   - .navbar : Kontainer navigasi utama di bagian atas (sticky).
+   - .nav-container : Kontainer flexbox di dalam navbar untuk merapikan logo dan link.
+   - .nav-brand : Nama pemilik portfolio / Logo teks.
+   - .nav-links : Daftar link menu navigasi.
+   - .nav-link : Item link menu individual.
+   - .nav-link.active : Status aktif ketika halaman berada di bagian section terkait.
+   - .menu-toggle : Tombol hamburger menu untuk tampilan mobile.
+
+3. Bagian Hero (.hero-section):
+   - .hero-section : Wadah utama bagian pembuka.
+   - .hero-content : Tata letak flex/grid untuk teks perkenalan dan foto.
+   - .hero-text : Blok teks perkenalan diri.
+   - .hero-title : Judul nama pemilik portfolio.
+   - .typewriter : Elemen teks berjalan yang menyimulasikan efek mengetik otomatis.
+   - .hero-subtitle : Teks penjelasan singkat di bawah nama.
+   - .hero-image-container : Wadah foto utama dengan efek gradien dan border-radius melingkar/konsisten.
+   - .hero-image : File foto pribadi utama (menggunakan 2211500030.jpg).
+   - .btn-group : Wadah untuk tombol Call-to-Action (CTA).
+   - .btn-primary & .btn-outline : Tombol aksi dengan gaya penuh dan gaya berbingkai.
+
+4. Bagian Tentang Saya (.about-section):
+   - .about-section : Wadah utama profil detail.
+   - .about-grid : Grid dua kolom untuk foto pendukung dan teks profil.
+   - .about-img-wrapper : Wadah foto pendukung dengan aksen dekoratif.
+   - .about-image : Foto pribadi pendukung (menggunakan IMG_20250803_075342_629.webp).
+   - .about-details : Teks profil dan rincian data diri.
+   - .info-cards : Grid kartu informasi ringkas.
+   - .info-card : Kartu info individual (Pendidikan) dengan border-radius konsisten.
+   - .card-action-links : Kontainer tombol tautan aksi di dalam kartu info.
+   - .btn-card-action : Tombol aksi individual (Web Kampus & Google Maps) dengan hover effect.
+
+5. Bagian Keahlian (.skills-section):
+   - .skills-section : Wadah utama daftar keahlian.
+   - .skills-table-wrapper : Pembungkus tabel dengan properti overflow-x: auto sebagai pengaman visual agar tidak terpotong di mobile.
+   - .skills-table : Elemen tabel utama penampil daftar keahlian.
+   - .skill-category : Baris kolom bagian kiri penanda Kategori teknologi.
+   - .skill-tools : Baris kolom bagian kanan berisi kumpulan badge teknologi.
+   - .skill-badge : Badge/chip kustom pembungkus nama teknologi dengan border-radius kapsul.
+   - .skills-subtitle : Sub-judul penanda tingkat penguasaan keahlian.
+   - .skills-progress-grid : Tata letak grid dua kolom pembungkus item kemajuan keahlian.
+   - .skill-item : Pembungkus item keahlian individual.
+   - .skill-info : Baris teks nama keahlian dan persentase numerik.
+   - .skill-bar : Baris latar belakang progres.
+   - .skill-progress : Baris gradasi level kemajuan keahlian yang aktif melebar saat di-scroll.
+
+6. Bagian Portofolio / Proyek (.portfolio-section):
+   - .portfolio-section : Wadah utama galeri proyek.
+   - .filter-container : Kumpulan tombol filter kategori proyek.
+   - .filter-btn : Tombol filter individual.
+   - .filter-btn.active : Tombol filter aktif saat diklik.
+   - .portfolio-grid : Grid responsif tempat menampilkan kartu proyek.
+   - .portfolio-card : Kartu proyek individual dengan zoom effect pada hover.
+   - .portfolio-img-wrapper : Pembungkus gambar proyek untuk memastikan rasio aspek aman.
+   - .portfolio-info : Informasi judul, deskripsi, dan tag proyek di bawah gambar.
+   - .project-tags : Kumpulan tag teknologi proyek.
+   - .project-tag : Tag teknologi individual.
+
+7. Bagian Galeri (.gallery-section):
+   - .gallery-section : Wadah galeri foto pribadi tambahan.
+   - .gallery-grid : Grid responsif menampilkan foto-foto sisa.
+   - .gallery-item : Pembungkus foto galeri dengan efek overlay teks / hover.
+   - .gallery-img : File foto pribadi (menggunakan IMG_20250705_055235_450.webp, IMG_20260226_045149_015.webp, IMG_20260315_021228_744.webp).
+
+8. Bagian Kontak (.contact-section):
+   - .contact-section : Wadah formulir dan informasi kontak.
+   - .contact-grid : Tata letak dua kolom untuk info kontak & form.
+   - .contact-info : Daftar detail kontak (email, nomor, alamat, medsos).
+   - .contact-form : Formulir input pengiriman pesan.
+   - .form-group : Kelompok label dan input dengan jarak konsisten.
+   - .form-control : Elemen input teks, email, dan textarea.
+   - .btn-submit : Tombol submit form dengan transpirasi hover stabil.
+
+9. Komponen Modal Overlay (Lightbox Galeri):
+   - .modal-overlay : Latar belakang transparan gelap dengan backdrop-filter blur untuk melihat foto secara penuh.
+   - .modal-container : Pembungkus gambar modal dengan tombol tutup.
+   - .modal-img : Gambar ukuran penuh yang sedang ditampilkan di modal.
+   - .modal-close : Tombol silang untuk menutup modal.
+
+10. Halaman Detail Proyek (project-detail.html):
+    - .project-detail-body : Pengaturan dasar body halaman detail proyek.
+    - .detail-nav : Wadah menu navigasi kembali.
+    - .btn-back : Tombol kembali dengan animasi translasi hover.
+    - .project-detail-grid : Struktur tata letak grid dua kolom pembagi konten utama dan sidebar.
+    - .project-main-info : Kontainer bagian informasi utama proyek (kiri).
+    - .project-banner-wrapper : Pembungkus gambar banner utama proyek.
+    - .project-title-large : Judul besar nama proyek.
+    - .project-section-title : Judul sub-bagian konten (Deskripsi, Cerita, Fitur).
+    - .project-description-text : Paragraf penjelasan detail proyek.
+    - .project-features-list : Kontainer daftar fitur utama.
+    - .project-feature-item : Baris fitur individual dengan ikon centang SVG.
+    - .project-sidebar : Kontainer bagian sidebar metadata proyek (kanan).
+    - .project-meta-card : Kartu metadata modular dengan posisi melayang (sticky).
+    - .meta-item : Kelompok label dan nilai informasi metadata.
+    - .meta-label : Label kategori metadata (misal: KATEGORI, TANGGAL).
+    - .meta-value : Nilai data informasi metadata.
+    - .project-links-group : Kelompok tombol tautan demo dan repository.
+
+------------------------------------------------------------------------
+II. PENAMAAN VARIABEL & FUNGSI JAVASCRIPT (script.js)
+------------------------------------------------------------------------
+1. Efek Mengetik Otomatis (Hero Section):
+   - words : Array berisi string peran pekerjaan (misalnya: ['Web Developer', 'UI/UX Designer', 'Tech Enthusiast']).
+   - wordIndex : Indeks penunjuk kata aktif dalam array.
+   - charIndex : Indeks penunjuk karakter huruf aktif yang sedang diketik atau dihapus.
+   - isDeleting : Boolean untuk menandai apakah teks sedang dalam proses dihapus.
+   - typewriterElement : Variabel penampung elemen DOM `.typewriter`.
+   - typeEffect() : Fungsi rekursif untuk menjalankan animasi ketik, hapus, jeda, dan transisi antar kata.
+
+2. Navigasi Link Aktif & Animasi Stagger Tabel & Progress Skill (Scroll Observer):
+   - sections : NodeList penampung semua elemen `<section>` di halaman.
+   - navLinks : NodeList penampung seluruh tautan navigasi di navbar.
+   - skillRows : NodeList penampung semua baris tr dalam tabel keahlian untuk animasi.
+   - skillProgressBars : NodeList penampung seluruh elemen bar kemajuan skill_progress.
+   - observerOptions : Objek konfigurasi Intersection Observer (threshold, rootMargin).
+   - navObserver : Instansi IntersectionObserver untuk melacak section aktif di viewport.
+   - skillsObserver : Instansi IntersectionObserver untuk memicu animasi baris tabel keahlian secara berurutan (stagger) dan pengisian lebar progress bar saat terlihat.
+   - (Callback Observer) : Memperbarui class active di navbar, menambahkan class animate di tabel row, dan mengisi lebar style.width progress bar.
+
+3. Mobile Menu Toggle:
+   - menuToggle : Variabel penampung elemen DOM `.menu-toggle`.
+   - navLinksContainer : Variabel penampung elemen DOM `.nav-links`.
+   - (Event Listener) : Menangani klik menuToggle untuk menambah/menghapus kelas `.show` pada navLinksContainer untuk membuka menu responsif di layar kecil.
+
+4. Filter Galeri Portofolio:
+   - filterButtons : NodeList penampung tombol filter kategori `.filter-btn`.
+   - portfolioCards : NodeList penampung elemen kartu proyek `.portfolio-card`.
+   - filterProjects(category) : Fungsi untuk menyembunyikan atau menampilkan kartu proyek dengan menambahkan kelas CSS `.hide` atau `.show` berdasarkan parameter kategori yang dipilih.
+
+5. Galeri Modal (Lightbox):
+   - galleryItems : NodeList penampung gambar galeri `.gallery-img`.
+   - modalOverlay : Elemen DOM overlay modal `.modal-overlay`.
+   - modalImg : Elemen DOM gambar di dalam modal `.modal-img`.
+   - modalClose : Elemen DOM tombol tutup `.modal-close`.
+   - openModal(src) : Fungsi untuk mengaktifkan overlay modal dan menetapkan src gambar modal dengan src gambar yang di-klik.
+   - closeModal() : Fungsi untuk menonaktifkan overlay modal dengan menghapus kelas aktif.
+
+6. Formulir Kontak & Validasi:
+   - contactForm : Elemen DOM formulir `.contact-form`.
+   - (Event Listener Submit) : Menangkap event submit form, mencegah reload default, melakukan validasi dasar, menampilkan notifikasi sukses interaktif, dan mereset form.
+
+7. Parsing Data Detail Proyek Dinamis (project-detail.html):
+   - projectsData : Objek data besar statis berisi detail masing-masing proyek (warkop-qr, dashboard-finansial, portal-berita).
+   - urlParams : Instansi URLSearchParams untuk menangkap query string di URL browser.
+   - projectId : Nilai ID proyek aktif yang didapatkan dari parameter query 'project'.
+   - errorContainer : Elemen DOM penampil notifikasi jika proyek tidak terdaftar.
+   - detailContent : Elemen DOM kontainer utama detail proyek yang di-render dinamis.
+------------------------------------------------------------------------
+III. RIWAYAT PERUBAHAN & PENAMBAHAN FITUR
+------------------------------------------------------------------------
+1. Penyesuaian Latar Belakang Gambar Global (style.css):
+   - Properti background-image ditambahkan pada selektor `body` dengan memadukan berkas 'foto_pribadi/latar_belakang_portfolio.png' dan filter gradien warna dasar semi-transparan `rgba(41, 54, 129, 0.85)` untuk menjaga kontras keterbacaan teks.
+   - Properti background-size diatur ke `cover` untuk pemenuhan skala layar penuh responsif.
+   - Properti background-attachment diatur ke `fixed` untuk menghadirkan efek visual premium saat halaman di-scroll.
+   - Properti background-position dan background-repeat disesuaikan masing-masing ke `center` dan `no-repeat`.
+   - Properti background-color pada kelas `.project-detail-body` diubah menjadi `transparent` agar secara konsisten mewarisi gambar latar belakang yang sama dari elemen `body`.
+2. Penggantian Tautan Sosial Media (index.html):
+   - Mengubah elemen tautan sosial media Dribbble (aria-label="Dribbble") menjadi Instagram (aria-label="Instagram").
+   - Memperbarui gambar ikon SVG Dribbble menjadi kode gambar SVG Instagram bergaya ikon Feather agar selaras dengan ikon lainnya.
+3. Perubahan Ikon Sosial Media (index.html):
+   - Mengganti visualisasi ikon SVG pada link Instagram dan YouTube dengan elemen `<img>` yang memuat berkas gambar PNG lokal masing-masing ('foto_pribadi/instagram.png' dan 'foto_pribadi/youtube.png').
+   - Mengatur dimensi gambar ke 20x20 piksel dengan properti `object-fit: contain` untuk menyelaraskan dengan ukuran ikon tombol lingkaran lainnya.
+========================================================================
