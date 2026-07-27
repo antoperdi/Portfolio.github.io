@@ -1,82 +1,59 @@
-# Rakhmat Perdianto - Portofolio Premium
+# Rakhmat Perdianto - Web Portfolio Showcase
 
-Selamat datang di repositori portofolio web premium milik **Rakhmat Perdianto**. Website ini dirancang dengan gaya modern, responsif, dan interaktif menggunakan sentuhan efek *glassmorphism*, animasi transisi yang halus, serta tata letak responsif (*fully responsive*) di semua ukuran perangkat.
-
-## 🚀 Fitur Utama
-
-- **Desain Glassmorphic Modern**: Antarmuka transparan dengan efek blur latar belakang dan bayangan lembut untuk kesan futuristik dan bersih.
-- **Latar Belakang Gambar Global**: Menggunakan gambar kustom latar belakang (`foto_pribadi/latar_belakang_portfolio.png`) dengan efek *fixed scrolling* (parallax) yang dinamis.
-- **Efek Mengetik Otomatis (Typewriter)**: Animasi mengetik dinamis pada bagian pembuka (Hero Section) untuk memperkenalkan peran keahlian secara interaktif.
-- **Filter Galeri Proyek**: Fitur filter interaktif berbasis JavaScript untuk mengkategorikan proyek portofolio tanpa memuat ulang halaman (seamless).
-- **Detail Proyek Dinamis**: Halaman detail proyek yang memuat informasi cerita pengerjaan, spesifikasi teknologi, serta fitur secara dinamis berdasarkan parameter URL.
-- **Galeri Foto Modal (Lightbox)**: Membuka foto-foto galeri pribadi dalam overlay layar penuh dengan latar belakang redup dan tombol tutup.
-- **Formulir Kontak Responsif**: Formulir pesan interaktif dengan validasi langsung dan simulasi notifikasi sukses yang ramah pengguna.
-- **Navigasi Sticky & Intersection Observer**: Navigasi cerdas yang mendeteksi posisi scroll pengguna dan secara otomatis memberikan efek aktif pada menu navigasi yang sedang dibaca.
-
-## 🛠️ Teknologi yang Digunakan
-
-- **Struktur & Konten**: HTML5 (Struktur Semantis)
-- **Desain & Animasi**: Vanilla CSS3 (Variabel CSS, Grid Layout, Flexbox, Media Queries)
-- **Logika & Interaktivitas**: Vanilla JavaScript (ES6+, Intersection Observer API, URLSearchParams)
-- **Aset & Ikon**: Gambar PNG lokal kustom (Instagram, YouTube, GitHub, LinkedIn, Email, dan Lokasi) untuk menjamin kualitas rendering ikon yang stabil.
+Selamat datang di showcase visual portofolio web milik **Rakhmat Perdianto**. Halaman ini menampilkan dokumentasi visual dari setiap bagian (*section*) yang ada di dalam website portofolio premium ini.
 
 ---
 
-## 📷 Dokumentasi Tampilan Antarmuka (Visual Showcase)
+## 🖥️ Visualisasi Bagian Portofolio (Section Showcase)
 
-Berikut adalah dokumentasi tampilan antarmuka halaman portofolio dari hasil pengujian visual:
+### 1. HERO SECTION
+Bagian pembuka utama halaman web yang memuat teks perkenalan, efek typewriter interaktif, tombol Call to Action (CTA), serta foto profil utama Rakhmat Perdianto.
 
-### 1. Halaman Beranda Utama (Hero Section)
-Tampilan awal halaman beranda dengan nama, perkenalan diri, typewriter effect, serta foto utama dengan aksen gradasi yang menarik di atas latar belakang gambar fixed.
-
-![Tampilan Atas Beranda](foto_pribadi/screenshot_index_top.png)
+![1. HERO SECTION](foto_pribadi/screenshot_hero.png)
 
 ---
 
-### 2. Bagian Konten Beranda (Scrolled View)
-Ketika halaman digulir ke bawah, konten melayang di atas gambar latar belakang yang tetap diam (*fixed background*). Bagian ini memuat tabel keahlian responsif dengan bar kemajuan (*progress bar*) yang memanjang saat masuk ke layar.
+### 2. ABOUT ME SECTION
+Bagian yang menjelaskan deskripsi diri secara mendalam, riwayat singkat, kartu informasi pendidikan, serta menyertakan foto profil pendukung yang rapi.
 
-![Tampilan Konten Beranda](foto_pribadi/screenshot_index_scrolled.png)
-
----
-
-### 3. Halaman Detail Proyek (Project Detail Page)
-Halaman detail proyek yang menampilkan banner proyek, deskripsi lengkap, kisah pengerjaan, list fitur utama dengan ikon centang, serta info sidebar kustom yang responsif. Latar belakang gambar global terwarisi secara konsisten dan transparan.
-
-![Tampilan Detail Proyek](foto_pribadi/screenshot_project_detail.png)
+![2. ABOUT ME SECTION](foto_pribadi/screenshot_about.png)
 
 ---
 
-### 4. Bagian Konten Detail Proyek (Scrolled View)
-Halaman detail proyek ketika di-scroll ke bawah, memperlihatkan list fitur yang rapi, tombol aksi demo, serta bagian footer berlabel kustom.
+### 3. SKILLS SECTION
+Bagian yang menampilkan tingkat penguasaan keahlian teknologi (seperti PHP, JavaScript, Laravel, CodeIgniter, Tailwind CSS) dalam bentuk tabel responsif dan indikator persentase dinamis.
 
-![Tampilan Konten Detail Proyek](foto_pribadi/screenshot_project_detail_scrolled.png)
+![3. SKILLS SECTION](foto_pribadi/screenshot_skills.png)
+
+---
+
+### 4. PORTFOLIO SECTION
+Galeri kartu proyek yang dikerjakan dengan fitur tombol filter interaktif (Semua, Web Dev, UI/UX) untuk menyaring kartu proyek secara mulus (*seamless*).
+
+![4. PORTFOLIO SECTION](foto_pribadi/screenshot_portfolio.png)
 
 ---
 
-## 📂 Struktur Direktori
+### 5. GALLERY SECTION
+Galeri foto dokumentasi pribadi tambahan yang disusun dengan tata letak grid modern serta memiliki interaksi zoom hover yang menawan.
 
-```bash
-Portfolio/
-├── foto_pribadi/          # Direktori aset gambar pribadi & ikon sosial
-│   ├── instagram.png
-│   ├── youtube.png
-│   ├── github.png
-│   ├── linkedin.png
-│   ├── email.png
-│   ├── placeholder.png
-│   ├── latar_belakang_portfolio.png
-│   ├── screenshot_index_top.png
-│   ├── screenshot_index_scrolled.png
-│   ├── screenshot_project_detail.png
-│   └── screenshot_project_detail_scrolled.png
-├── index.html             # Halaman utama portofolio
-├── project-detail.html    # Halaman detail proyek dinamis
-├── style.css              # Stylesheet kustom utama
-├── script.js              # Logika interaktivitas Javascript
-├── comment.txt            # Dokumentasi struktur kode & riwayat perubahan
-└── README.md              # Dokumentasi proyek (file ini)
-```
+![5. GALLERY SECTION](foto_pribadi/screenshot_gallery.png)
 
 ---
-Dibuat dengan ❤️ oleh **Rakhmat Perdianto**.
+
+### 6. CONTACT SECTION
+Bagian penutup halaman web yang menyediakan tautan media sosial (GitHub, LinkedIn, Instagram, YouTube) berbentuk ikon kustom, info kontak penting, serta formulir kirim pesan responsif.
+
+![6. CONTACT SECTION](foto_pribadi/screenshot_contact.png)
+
+---
+
+## 📂 Struktur Aset Gambar Showcase
+Semua gambar visualisasi di atas disimpan di dalam folder:
+`foto_pribadi/`
+- [screenshot_hero.png](foto_pribadi/screenshot_hero.png)
+- [screenshot_about.png](foto_pribadi/screenshot_about.png)
+- [screenshot_skills.png](foto_pribadi/screenshot_skills.png)
+- [screenshot_portfolio.png](foto_pribadi/screenshot_portfolio.png)
+- [screenshot_gallery.png](foto_pribadi/screenshot_gallery.png)
+- [screenshot_contact.png](foto_pribadi/screenshot_contact.png)

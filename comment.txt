@@ -182,6 +182,6 @@ III. RIWAYAT PERUBAHAN & PENAMBAHAN FITUR
    - Mengganti visualisasi ikon SVG pada link Instagram dan YouTube dengan elemen `<img>` yang memuat berkas gambar PNG lokal masing-masing ('foto_pribadi/instagram.png' dan 'foto_pribadi/youtube.png').
    - Mengatur dimensi gambar ke 20x20 piksel dengan properti `object-fit: contain` untuk menyelaraskan dengan ukuran ikon tombol lingkaran lainnya.
 4. Pembaruan Dokumentasi Repositori (README.md):
-   - Menulis ulang berkas README.md dengan menambahkan deskripsi proyek, fitur-fitur, teknologi stack, struktur direktori, serta galeri tangkapan layar (Visual Showcase) dari semua halaman web portofolio.
-   - Menyertakan rujukan berkas gambar screenshot beranda dan detail proyek yang disimpan di folder 'foto_pribadi/'.
+   - Menulis ulang berkas README.md agar berfokus menampilkan galeri visual terpisah dari 6 bagian utama portofolio (Hero, About Me, Skills, Portfolio, Gallery, dan Contact Section).
+   - Menyiapkan berkas gambar rujukan terpisah untuk masing-masing bagian tersebut di dalam direktori 'foto_pribadi/'.
 ========================================================================
