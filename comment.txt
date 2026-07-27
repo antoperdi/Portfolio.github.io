@@ -184,4 +184,53 @@ III. RIWAYAT PERUBAHAN & PENAMBAHAN FITUR
 4. Pembaruan Dokumentasi Repositori (README.md):
    - Menulis ulang berkas README.md agar berfokus menampilkan galeri visual terpisah dari 6 bagian utama portofolio (Hero, About Me, Skills, Portfolio, Gallery, dan Contact Section).
    - Menyiapkan berkas gambar rujukan terpisah untuk masing-masing bagian tersebut di dalam direktori 'foto_pribadi/'.
+5. Integrasi Backend Laravel 12 & Halaman Login Admin (Baru):
+   - Migrasi kode frontend portofolio statis ke struktur modular view Blade Laravel.
+   - Penambahan sistem keamanan (CSRF Token, server-side data validation, rate-limiter login).
+   - Pengaktifan helper kustom (log_message & html_escape) untuk kepatuhan standar pemrograman aman.
+
+------------------------------------------------------------------------
+IV. PENAMAAN BLOK KODE BACKEND ADMIN (LARAVEL 12)
+------------------------------------------------------------------------
+1. Model Pengguna (app/Models/User.php):
+   - User : Kelas Model Eloquent untuk representasi tabel 'users'.
+   - $table : Variabel penentu nama tabel di MySQL ('users').
+   - $fillable : Variabel array kolom yang dapat ditulis ('username', 'password', 'name').
+   - $hidden : Variabel array kolom yang disembunyikan dalam output ('password').
+   - $timestamps : Variabel penentu pencatatan waktu otomatis (diatur ke false).
+   - casts() : Fungsi mendapat casting tipe data (kolom password dikonversi ke hashed).
+
+2. Controller Autentikasi (app/Http/Controllers/AuthController.php):
+   - AuthController : Kelas Controller utama pengelola status masuk admin.
+   - showLogin() : Fungsi untuk merender view form login admin ('admin.login') serta mengalihkan jika sudah aktif login.
+   - login() : Fungsi untuk memvalidasi input username/password dari client secara asinkron (AJAX POST) dan memproses status masuk.
+   - dashboard() : Fungsi untuk mengamankan dan menampilkan dashboard admin ('admin.dashboard').
+   - logout() : Fungsi untuk menghapus session aktif, meregenerasi token CSRF, dan mengembalikan user ke halaman masuk.
+
+3. Helper Global Kustom (app/Helpers/helpers.php):
+   - html_escape() : Fungsi pembantu untuk menyaring input/output guna mencegah celah keamanan Cross-Site Scripting (XSS).
+   - log_message() : Fungsi pembantu perekam log kesalahan sistem/keamanan secara eksternal ke log Laravel.
+
+4. Database Seeder (database/seeders/AdminUserSeeder.php):
+   - AdminUserSeeder : Kelas seeder database untuk akun admin awal.
+   - run() : Fungsi utama pengisi baris data admin, melakukan hash password dengan bcrypt, dan menyimpannya ke tabel 'users'.
+
+5. Skema Kolom Tabel Database MySQL (Tabel: users & profile):
+   - Tabel 'users' (Tabel Autentikasi Admin):
+     * id : Kolom ID unik, tipe integer, Primary Key, Auto-increment.
+     * username : Kolom username pengenal admin, tipe varchar(50), Unique Key.
+     * password : Kolom penyimpanan password bcrypt hash, tipe varchar(255).
+     * name : Kolom nama lengkap admin, tipe varchar(100).
+     * created_at : Kolom penanda waktu pembuatan akun, tipe timestamp.
+   - Tabel 'profile' (Tabel Data Portofolio Utama):
+     * id : Kolom ID profil, tipe integer, Primary Key, Auto-increment.
+     * name : Kolom nama lengkap pemilik portofolio, tipe varchar(100).
+     * title : Kolom jabatan/profesi pekerjaan, tipe varchar(150).
+     * bio : Kolom biografi ringkas profil, tipe text.
+     * email : Kolom alamat e-mail aktif, tipe varchar(100).
+     * phone : Kolom nomor kontak telepon genggam, tipe varchar(20).
+     * address : Kolom alamat domisili lengkap, tipe text.
+     * profile_pic : Kolom nama berkas gambar foto profil, tipe varchar(255).
+     * updated_at : Kolom penanda pembaruan data otomatis, tipe timestamp.
+
 ========================================================================

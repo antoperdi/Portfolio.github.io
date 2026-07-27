@@ -9,7 +9,7 @@
     content="Detail lengkap pengerjaan proyek, fitur utama, dan teknologi yang digunakan oleh Rakhmat Perdianto.">
 
   <!-- Referensi Stylesheet Utama -->
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="{{ asset('style.css') }}">
 </head>
 
 <body class="project-detail-body">
@@ -17,7 +17,7 @@
   <main class="container">
     <!-- Navigasi Kembali -->
     <nav class="detail-nav">
-      <a href="index.html#portfolio" class="btn-back">
+      <a href="{{ url('/#portfolio') }}" class="btn-back">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
           stroke-linecap="round" stroke-linejoin="round">
           <line x1="19" y1="12" x2="5" y2="12"></line>
@@ -32,7 +32,7 @@
       <h1 class="project-title-large" style="color: var(--accent); margin-bottom: 20px;">Proyek Tidak Ditemukan</h1>
       <p style="color: var(--light); margin-bottom: 30px;">Maaf, detail informasi proyek yang Anda cari tidak tersedia
         atau telah dihapus.</p>
-      <a href="index.html#portfolio" class="btn btn-primary">Kembali ke Beranda</a>
+      <a href="{{ url('/#portfolio') }}" class="btn btn-primary">Kembali ke Beranda</a>
     </div>
 
     <!-- Grid Detail Proyek (Secara default disembunyikan sampai data dimuat) -->
@@ -130,7 +130,7 @@
         'warkop-qr': {
           title: 'Warkop QR - Sistem Pemesanan & POS Digital',
           category: 'Aplikasi Web',
-          banner: 'foto_pribadi/readme_banner.png',
+          banner: "{{ asset('foto_pribadi/readme_banner.png') }}",
           date: 'Maret-Mei 2026',
           role: 'Full Stack Developer',
           description: 'Warkop QR adalah aplikasi web inovatif pemesanan menu mandiri oleh pelanggan berbasis QR Code meja yang langsung terintegrasi secara real-time dengan sistem Point of Sales (POS) kasir. Dirancang khusus untuk warkop modern guna meniadakan antrean pesanan di meja kasir dan meminimalisir kesalahan catat pesanan.',
@@ -140,7 +140,7 @@
             'Dashboard Kasir & Pemantauan dapur dengan status pesanan real-time.',
             'Laporan Keuangan otomatis harian, mingguan, dan bulanan.',
             'Sistem Manajemen Stok Inventaris bahan baku/menu real-time.',
-            'Security Alert internal dan filter XSS / SQL Injection bawaan Laravel.'
+            'Security Alert internal and filter XSS / SQL Injection bawaan Laravel.'
           ],
           tags: ['Laravel 12', 'Vanilla JavaScript', 'Bootstrap', 'PHP', 'MySQL', 'Tailwind CSS'],
           repo: 'https://github.com/antoperdi/warkop_QR'
@@ -148,7 +148,7 @@
         'dashboard-finansial': {
           title: 'Dashboard Finansial Modern',
           category: 'Desain UI/UX',
-          banner: 'foto_pribadi/IMG_20260226_045149_015.webp',
+          banner: "{{ asset('foto_pribadi/IMG_20260226_045149_015.webp') }}",
           date: 'Maret-Mei 2026',
           role: 'UI/UX Designer',
           description: 'Rancangan desain antarmuka (UI/UX) dasbor analitik manajemen keuangan korporasi dan personal. Didesain dengan mengutamakan visualisasi data statistik yang bersih, modern, dan mudah dipahami.',
@@ -166,7 +166,7 @@
         'portal-berita': {
           title: 'Sistem Kesehatan Laboratorium UPTD Labkes Kota Pangkalpinang',
           category: 'Aplikasi Web',
-          banner: 'foto_pribadi/halaman login.png',
+          banner: "{{ asset('foto_pribadi/halaman login.png') }}",
           date: 'April - Juli 2026',
           role: 'Frontend Developer',
           description: 'Aplikasi Sistem Informasi Kesehatan Laboratorium UPTD Labkes Kota Pangkalpinang merupakan solusi digital berbasis web yang dirancang untuk mengintegrasikan dan mengoptimalkan seluruh alur pelayanan laboratorium kesehatan masyarakat. Sistem ini mengotomatisasi proses bisnis mulai dari pendaftaran pasien/sampel, validasi spesimen, pemrosesan hasil pemeriksaan medis maupun laboratorium lingkungan, hingga penerbitan Surat Hasil Pemeriksaan (LHP) secara akurat dan efisien. Dengan transparansi data dan tata kelola yang terstruktur, aplikasi ini hadir untuk memangkas waktu tunggu, meminimalisir risiko human error, serta meningkatkan mutu pelayanan publik kesehatan bagi masyarakat Kota Pangkalpinang',
@@ -233,8 +233,8 @@
         });
 
         // Konfigurasi Link Eksternal
-        document.getElementById('link-demo').href = project.demo;
-        document.getElementById('link-repo').href = project.repo;
+        document.getElementById('link-demo').href = project.demo || '#';
+        document.getElementById('link-repo').href = project.repo || '#';
 
         // Tampilkan Konten Detail
         detailContent.style.display = 'grid';

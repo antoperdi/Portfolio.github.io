@@ -6,10 +6,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Rakhmat Perdianto | Portfolio Premium</title>
   <meta name="description"
-    content="Portfolio Web Profesional Fajar Santoso - Web Developer & UI/UX Designer dengan fokus pada pembuatan website interaktif, responsif, dan bernilai seni tinggi.">
+    content="Portfolio Web Profesional Rakhmat Perdianto - Web Developer & UI/UX Designer dengan fokus pada pembuatan website interaktif, responsif, dan bernilai seni tinggi.">
 
   <!-- Referensi Stylesheet -->
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="{{ asset('style.css') }}">
 </head>
 
 <body>
@@ -76,7 +76,7 @@
         <div class="hero-image-container">
           <div class="hero-image-wrapper">
             <!-- Foto Pribadi Utama -->
-            <img src="foto_pribadi/2211500030.jpg" alt="Fajar Santoso - Foto Utama" class="hero-image" loading="eager">
+            <img src="{{ asset('foto_pribadi/2211500030.jpg') }}" alt="Rakhmat Perdianto - Foto Utama" class="hero-image" loading="eager">
           </div>
           <div class="hero-image-card-accent"></div>
         </div>
@@ -93,15 +93,14 @@
         <div class="about-grid">
           <div class="about-img-wrapper">
             <!-- Foto Pribadi Pendukung 1 -->
-            <img src="foto_pribadi/IMG_20250803_075342_629.webp" alt="Fajar Santoso - Foto Tentang Saya"
+            <img src="{{ asset('foto_pribadi/IMG_20250803_075342_629.webp') }}" alt="Rakhmat Perdianto - Foto Tentang Saya"
               class="about-image" loading="lazy">
           </div>
 
           <div class="about-details">
             <p class="about-desc">
               Saya adalah Full Stack Web Developer dan IT Support Specialist yang memiliki passion besar dalam
-              memecahkan
-              masalah kompleks melalui kode yang bersih dan terstruktur.
+              memecahkan masalah kompleks melalui kode yang bersih dan terstruktur.
 
               Spesialisasi utama saya berfokus pada pengembangan backend menggunakan PHP (Laravel & CodeIgniter) dengan
               basis data MySQL, serta pembuatan antarmuka frontend yang responsif dan estetis menggunakan JavaScript,
@@ -109,8 +108,7 @@
 
               Dengan menggabungkan logika backend yang tangguh dan desain frontend yang intuitif, saya memastikan setiap
               aplikasi web yang dibangun memiliki performa cepat, aman, dan mudah digunakan. Sebagai seorang fast
-              learner
-              yang adaptif, saya selalu antusias menguasai teknologi baru dan menerapkan standar arsitektur Clean Code.
+              learner yang adaptif, saya selalu antusias menguasai teknologi baru dan menerapkan standar arsitektur Clean Code.
             </p>
             <p class="about-desc">
               Selalu bersemangat mempelajari teknologi baru dan mengimplementasikan standar keamanan web terbaik serta
@@ -281,16 +279,13 @@
         <div class="portfolio-grid-wrapper">
           <div class="portfolio-grid">
             <!-- Kartu Proyek 1 -->
-            <a href="project-detail.html?project=warkop-qr" class="portfolio-card show" data-category="web">
+            <a href="/project-detail?project=warkop-qr" class="portfolio-card show" data-category="web">
               <div class="portfolio-img-wrapper">
-                <!-- Foto Pribadi Alternatif Web Projek 1 -->
-                <img src="foto_pribadi/readme_banner.png" alt="Proyek Web E-Commerce" loading="lazy">
+                <img src="{{ asset('foto_pribadi/readme_banner.png') }}" alt="Proyek Web E-Commerce" loading="lazy">
               </div>
               <div class="portfolio-info">
                 <h3>Warkop QR - Sistem Pemesanan & POS Digital</h3>
-                <p>Aplikasi Sistem Pemesanan & POS Digital yang dibangun menggunakan Laravel 12 dengan pengamanan penuh
-                  terhadap
-                  celah SQL Injection, CSRF Protection, Request Validation.</p>
+                <p>Aplikasi Sistem Pemesanan & POS Digital yang dibangun menggunakan Laravel 12 dengan pengamanan penuh terhadap celah SQL Injection, CSRF Protection, Request Validation.</p>
                 <div class="project-tags">
                   <span class="project-tag">Laravel 12</span>
                   <span class="project-tag">Vanilla JavaScript</span>
@@ -303,17 +298,13 @@
             </a>
 
             <!-- Kartu Proyek 2 -->
-            <a href="project-detail.html?project=dashboard-finansial" class="portfolio-card show"
-              data-category="design">
+            <a href="/project-detail?project=dashboard-finansial" class="portfolio-card show" data-category="design">
               <div class="portfolio-img-wrapper">
-                <!-- Foto Pribadi Alternatif UI Design 1 -->
-                <img src="foto_pribadi/IMG_20260226_045149_015.webp" alt="Proyek UI/UX Dashboard Keuangan"
-                  loading="lazy">
+                <img src="{{ asset('foto_pribadi/IMG_20260226_045149_015.webp') }}" alt="Proyek UI/UX Dashboard Keuangan" loading="lazy">
               </div>
               <div class="portfolio-info">
                 <h3>Dashboard Finansial Modern</h3>
-                <p>Desain antarmuka dashboard keuangan interaktif dengan konsep Glassmorphism, berfokus pada kemudahan
-                  membaca visualisasi grafik data.</p>
+                <p>Desain antarmuka dashboard keuangan interaktif dengan konsep Glassmorphism, berfokus pada kemudahan membaca visualisasi grafik data.</p>
                 <div class="project-tags">
                   <span class="project-tag">Figma</span>
                   <span class="project-tag">UI/UX</span>
@@ -323,21 +314,13 @@
             </a>
 
             <!-- Kartu Proyek 3 -->
-            <a href="project-detail.html?project=portal-berita" class="portfolio-card show" data-category="web">
+            <a href="/project-detail?project=portal-berita" class="portfolio-card show" data-category="web">
               <div class="portfolio-img-wrapper">
-                <!-- Foto Pribadi Alternatif Web Projek 2 -->
-                <img src="foto_pribadi/halaman login.png" alt="Proyek Sistem Kesehatan Laboratorium" loading="lazy">
+                <img src="{{ asset('foto_pribadi/halaman login.png') }}" alt="Proyek Sistem Kesehatan Laboratorium" loading="lazy">
               </div>
               <div class="portfolio-info">
                 <h3>Sistem Kesehatan Laboratorium UPTD Labkes Kota Pangkalpinang</h3>
-                <p>Aplikasi Sistem Informasi Kesehatan Laboratorium UPTD Labkes Kota Pangkalpinang merupakan solusi
-                  digital berbasis web yang dirancang untuk mengintegrasikan dan mengoptimalkan seluruh alur pelayanan
-                  laboratorium kesehatan masyarakat. Sistem ini mengotomatisasi proses bisnis mulai dari pendaftaran
-                  pasien/sampel, validasi spesimen, pemrosesan hasil pemeriksaan medis maupun laboratorium lingkungan,
-                  hingga penerbitan Surat Hasil Pemeriksaan (LHP) secara akurat dan efisien. Dengan transparansi data
-                  dan tata kelola yang terstruktur, aplikasi ini hadir untuk memangkas waktu tunggu, meminimalisir
-                  risiko human error, serta meningkatkan mutu pelayanan publik kesehatan bagi masyarakat Kota
-                  Pangkalpinang</p>
+                <p>Aplikasi Sistem Informasi Kesehatan Laboratorium UPTD Labkes Kota Pangkalpinang merupakan solusi digital berbasis web yang dirancang untuk mengintegrasikan dan mengoptimalkan seluruh alur pelayanan laboratorium kesehatan masyarakat...</p>
                 <div class="project-tags">
                   <span class="project-tag">HTML5</span>
                   <span class="project-tag">Vanilla CSS</span>
@@ -361,8 +344,7 @@
           <div class="gallery-grid">
             <!-- Galeri 1 -->
             <div class="gallery-item">
-              <img src="foto_pribadi/IMG_20250705_055235_450.webp" alt="Fokus Kerja di Ruang Kreatif"
-                class="gallery-img" loading="lazy">
+              <img src="{{ asset('foto_pribadi/IMG_20250705_055235_450.webp') }}" alt="Fokus Kerja di Ruang Kreatif" class="gallery-img" loading="lazy">
               <div class="gallery-overlay">
                 <p>Fokus Kerja di Ruang Kreatif</p>
               </div>
@@ -370,8 +352,7 @@
 
             <!-- Galeri 2 -->
             <div class="gallery-item">
-              <img src="foto_pribadi/IMG_20260226_045149_015.webp" alt="Menyusun Konsep Desain Antarmuka"
-                class="gallery-img" loading="lazy">
+              <img src="{{ asset('foto_pribadi/IMG_20260226_045149_015.webp') }}" alt="Menyusun Konsep Desain Antarmuka" class="gallery-img" loading="lazy">
               <div class="gallery-overlay">
                 <p>Menyusun Konsep Desain Antarmuka</p>
               </div>
@@ -379,8 +360,7 @@
 
             <!-- Galeri 3 -->
             <div class="gallery-item">
-              <img src="foto_pribadi/IMG_20260315_021228_744.webp" alt="Eksperimen Pemrograman Berkelanjutan"
-                class="gallery-img" loading="lazy">
+              <img src="{{ asset('foto_pribadi/IMG_20260315_021228_744.webp') }}" alt="Eksperimen Pemrograman Berkelanjutan" class="gallery-img" loading="lazy">
               <div class="gallery-overlay">
                 <p>Eksperimen Pemrograman Berkelanjutan</p>
               </div>
@@ -401,13 +381,12 @@
           <div class="contact-info">
             <h3 class="contact-info-title">Ada Proyek Menarik?<br>Mari Kolaborasi!</h3>
             <p class="contact-info-desc">
-              Pintu saya selalu terbuka untuk mendiskusikan peluang proyek baru, merancang solusi digital kreatif, atau
-              sekadar bertukar pikiran seputar perkembangan teknologi web.
+              Pintu saya selalu terbuka untuk mendiskusikan peluang proyek baru, merancang solusi digital kreatif, atau sekadar bertukar pikiran seputar perkembangan teknologi web.
             </p>
 
             <div class="contact-details">
               <div class="contact-detail-item">
-                <img src="foto_pribadi/email.png" alt="Email" width="20" height="20" style="object-fit: contain;">
+                <img src="{{ asset('foto_pribadi/email.png') }}" alt="Email" width="20" height="20" style="object-fit: contain;">
                 <div class="contact-detail-text">
                   <a href="mailto:rakhmatperdianto@gmail.com" class="contact-detail-text">
                     <h5>E-mail Saya</h5>
@@ -418,8 +397,7 @@
 
               <div class="contact-detail-item">
                 <div class="contact-detail-icon">
-                  <img src="foto_pribadi/placeholder.png" alt="Lokasi" width="20" height="20"
-                    style="object-fit: contain;">
+                  <img src="{{ asset('foto_pribadi/placeholder.png') }}" alt="Lokasi" width="20" height="20" style="object-fit: contain;">
                 </div>
                 <div class="location-links">
                   <a href="https://maps.app.goo.gl/MPfGCjgRLdBZgHBcA?g_st=ac" class="contact-detail-text">
@@ -433,19 +411,16 @@
             <!-- Sosial Media Link -->
             <div class="social-links">
               <a href="https://github.com/" class="social-icon" aria-label="GitHub">
-                <img src="foto_pribadi/github.png" alt="Github" width="20" height="20" style="object-fit: contain;">
+                <img src="{{ asset('foto_pribadi/github.png') }}" alt="Github" width="20" height="20" style="object-fit: contain;">
               </a>
               <a href="#" class="social-icon" aria-label="LinkedIn">
-                <img src="foto_pribadi/linkedin.png" alt="Linkedin" width="20" height="20" style="object-fit: contain;">
+                <img src="{{ asset('foto_pribadi/linkedin.png') }}" alt="Linkedin" width="20" height="20" style="object-fit: contain;">
               </a>
-              <a href="https://www.instagram.com/rhqmat_?igsh=MWM5MGdmaTc5aG1kMA==" class="social-icon"
-                aria-label="Instagram">
-                <img src="foto_pribadi/instagram.png" alt="Instagram" width="20" height="20"
-                  style="object-fit: contain;">
+              <a href="https://www.instagram.com/rhqmat_?igsh=MWM5MGdmaTc5aG1kMA==" class="social-icon" aria-label="Instagram">
+                <img src="{{ asset('foto_pribadi/instagram.png') }}" alt="Instagram" width="20" height="20" style="object-fit: contain;">
               </a>
-              <a href="https://youtube.com/@rakhmatperdianto7616?si=sywZYvvMX5NpZPnY" class="social-icon"
-                aria-label="Youtube">
-                <img src="foto_pribadi/youtube.png" alt="Youtube" width="20" height="20" style="object-fit: contain;">
+              <a href="https://youtube.com/@rakhmatperdianto7616?si=sywZYvvMX5NpZPnY" class="social-icon" aria-label="Youtube">
+                <img src="{{ asset('foto_pribadi/youtube.png') }}" alt="Youtube" width="20" height="20" style="object-fit: contain;">
               </a>
             </div>
           </div>
@@ -464,8 +439,7 @@
 
               <div class="form-group">
                 <label for="message">Pesan Anda</label>
-                <textarea id="message" class="form-control"
-                  placeholder="Tuliskan pesan atau detail proyek Anda di sini..." required></textarea>
+                <textarea id="message" class="form-control" placeholder="Tuliskan pesan atau detail proyek Anda di sini..." required></textarea>
               </div>
               <button type="submit" class="btn btn-primary btn-submit">Kirim Pesan</button>
             </form>
@@ -486,7 +460,7 @@
   </footer>
 
   <!-- Referensi Script JS -->
-  <script src="script.js"></script>
+  <script src="{{ asset('script.js') }}"></script>
 </body>
 
 </html>
