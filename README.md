@@ -8,41 +8,41 @@ Selamat datang di showcase visual portofolio web milik **Rakhmat Perdianto**. Ha
 
 ### 1. Tampilan awal 
 
-![1. HERO SECTION](foto_pribadi/hero.jpeg)
+![1. HERO SECTION](public/foto_pribadi/hero.jpeg)
 
 ---
 
 ### 2. Tentang Saya
 
-![2. ABOUT ME SECTION](foto_pribadi/tentang_saya.jpeg)
+![2. ABOUT ME SECTION](public/foto_pribadi/tentang_saya.jpeg)
 
 ---
 
 ### 3. Keahlian Saya
 
-![3. SKILLS SECTION](foto_pribadi/Keahlian_Saya.jpeg)
+![3. SKILLS SECTION](public/foto_pribadi/Keahlian_Saya.jpeg)
 
 ---
 
 ### 4. Project Saya
 Galeri kartu Project yang dikerjakan dengan fitur tombol filter interaktif (Semua, Web Dev, UI/UX) untuk menyaring Project secara mulus (*seamless*).
 
-![4. Project Saya](foto_pribadi/Portofolio_Terkini.jpeg)
+![4. Project Saya](public/foto_pribadi/Portofolio_Terkini.jpeg)
 
 ---
 
 ### 5. Hubungi Saya
 
-![5. CONTACT SECTION](foto_pribadi/Hubungi_Saya.jpeg)
+![5. CONTACT SECTION](public/foto_pribadi/Hubungi_Saya.jpeg)
 
 
 ---
 
 ## 📂 Struktur Aset Gambar Showcase
 Semua gambar visualisasi di atas disimpan di dalam folder:
-`foto_pribadi/`
-- [hero.jpeg](foto_pribadi/hero.jpeg)
-- [tentang_saya.jpeg](foto_pribadi/tentang_saya.jpeg)
-- [Keahlian_Saya.jpeg](foto_pribadi/Keahlian_Saya.jpeg)
-- [Portofolio_Terkini.jpeg](foto_pribadi/Portofolio_Terkini.jpeg)
-- [Hubungi_Saya.jpeg](foto_pribadi/Hubungi_Saya.jpeg)
+`public/foto_pribadi/`
+- [hero.jpeg](public/foto_pribadi/hero.jpeg)
+- [tentang_saya.jpeg](public/foto_pribadi/tentang_saya.jpeg)
+- [Keahlian_Saya.jpeg](public/foto_pribadi/Keahlian_Saya.jpeg)
+- [Portofolio_Terkini.jpeg](public/foto_pribadi/Portofolio_Terkini.jpeg)
+- [Hubungi_Saya.jpeg](public/foto_pribadi/Hubungi_Saya.jpeg)
