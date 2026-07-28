@@ -76,6 +76,15 @@ Route::group(['prefix' => 'portal-admin'], function () {
         
         // Tampilan Halaman Kelola Proyek (Project_Saya)
         Route::get('/kelola-proyek', [AdminController::class, 'showKelolaProyek'])->name('admin.kelola_proyek');
+
+        // Tampilan Halaman Kelola Keahlian (Skills) (Rule 5)
+        Route::get('/kelola-keahlian', [AdminController::class, 'TampilKelolaKeahlian'])->name('admin.kelola_keahlian');
+
+        // Proses Simpan/Edit Keahlian via AJAX (Rule 5)
+        Route::post('/kelola-keahlian/simpan', [AdminController::class, 'simpanKeahlian'])->name('admin.simpan_keahlian');
+
+        // Proses Hapus Keahlian via AJAX (Rule 5)
+        Route::delete('/kelola-keahlian/delete/{id}', [AdminController::class, 'hapusKeahlian'])->name('admin.hapus_keahlian');
         
         // Proses Unggah/Edit Project Saya via AJAX (Project_Saya)
         Route::post('/kelola-proyek/upload', [AdminController::class, 'uploadProject'])->middleware('throttle:15,1');

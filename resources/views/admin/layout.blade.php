@@ -374,6 +374,17 @@
             Kelola Project Saya
           </a>
         </li>
+        <li class="menu-item {{ Request::is('portal-admin/kelola-keahlian') ? 'active' : '' }}">
+          <a href="{{ url('/portal-admin/kelola-keahlian') }}">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="12 2 22 8.5 22 15.5 12 22 2 15.5 2 8.5 12 2"></polygon>
+              <line x1="12" y1="22" x2="12" y2="12"></line>
+              <line x1="12" y1="12" x2="22" y2="8.5"></line>
+              <line x1="12" y1="12" x2="2" y2="8.5"></line>
+            </svg>
+            Kelola Keahlian
+          </a>
+        </li>
         <li class="menu-item">
           <a href="{{ url('/') }}" target="_blank">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

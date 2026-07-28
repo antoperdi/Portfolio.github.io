@@ -145,6 +145,128 @@ class AdminController extends Controller
     }
 
     /**
+     * Menampilkan halaman kelola keahlian (Skills) dengan memuat data dari database MySQL.
+     *
+     * @return \Illuminate\View\View
+     */
+    public function TampilKelolaKeahlian()
+    {
+        // Pengecekan hak akses admin (Rule 15 & 17)
+        if (!auth()->check()) {
+            log_message('error', 'Security Alert: Percobaan akses kelola keahlian tanpa autentikasi.');
+            return redirect()->route('admin.login');
+        }
+
+        // Mengambil seluruh data keahlian dari tabel skills menggunakan Query Builder (Rule 12)
+        $skills = DB::table('skills')->get();
+
+        return view('admin.kelola_keahlian', compact('skills'));
+    }
+
+    /**
+     * Memproses penyimpanan data keahlian baru (Insert) atau pembaruan (Update) secara asinkron.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function simpanKeahlian(Request $request)
+    {
+        // Pengecekan hak akses autentikasi (Rule 15 & 17)
+        if (!auth()->check()) {
+            log_message('error', 'Security Alert: Percobaan menyimpan data keahlian tanpa autentikasi.');
+            return response()->json(['success' => false, 'message' => 'Akses ditolak.'], 403);
+        }
+
+        // Validasi input masukan secara ketat (Rule 13)
+        $validator = Validator::make($request->all(), [
+            'id'         => 'nullable|integer',
+            'name'       => 'required|string|max:100',
+            'category'   => 'required|string|max:100',
+            'percentage' => 'required|integer|between:0,100',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validasi gagal. Pastikan data terisi dengan format yang benar dan persentase di antara 0-100.'
+            ], 422);
+        }
+
+        try {
+            $id = $request->input('id');
+            $data = [
+                'name'       => $request->input('name'),
+                'category'   => $request->input('category'),
+                'percentage' => intval($request->input('percentage')),
+            ];
+
+            if (!empty($id)) {
+                // Mode Update (Rule 12 & 15)
+                DB::table('skills')->where('id', $id)->update($data);
+                $message = 'Data keahlian berhasil diperbarui!';
+            } else {
+                // Mode Create / Insert (Rule 12)
+                $data['created_at'] = now();
+                DB::table('skills')->insert($data);
+                $message = 'Keahlian baru berhasil ditambahkan!';
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => $message
+            ]);
+
+        } catch (\Exception $e) {
+            log_message('error', 'Error: Gagal menyimpan data keahlian. Pesan: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan sistem saat menyimpan data keahlian.'
+            ], 500);
+        }
+    }
+
+    /**
+     * Memproses penghapusan data keahlian secara asinkron berdasarkan ID pemilik data.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function hapusKeahlian($id)
+    {
+        // Pengecekan hak akses autentikasi (Rule 15 & 17)
+        if (!auth()->check()) {
+            log_message('error', 'Security Alert: Percobaan menghapus data keahlian tanpa autentikasi.');
+            return response()->json(['success' => false, 'message' => 'Akses ditolak.'], 403);
+        }
+
+        try {
+            // Pengecekan keberadaan data sebelum dihapus (Rule 15)
+            $skillExists = DB::table('skills')->where('id', $id)->first();
+            if (!$skillExists) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Data keahlian tidak ditemukan.'
+                ], 404);
+            }
+
+            // Hapus data (Rule 12 & 15)
+            DB::table('skills')->where('id', $id)->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Data keahlian berhasil dihapus!'
+            ]);
+
+        } catch (\Exception $e) {
+            log_message('error', 'Error: Gagal menghapus data keahlian ID ' . $id . '. Pesan: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan sistem saat menghapus data keahlian.'
+            ], 500);
+        }
+    }
+
+    /**
      * Memproses unggahan berkas gambar dan menyimpannya langsung ke database MySQL (BLOB).
      *
      * @param  \Illuminate\Http\Request  $request

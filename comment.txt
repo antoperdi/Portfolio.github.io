@@ -457,4 +457,41 @@ XV. KUSTOMISASI TRANSPARANSI WARNA UTAMA & WARNA NAVIGATOR (2026-07-28)
    - project-detail.blade.php:
      * Menambahkan sinkronisasi CSS variabel --navigator dan linear-gradient background pada body halaman detail agar selaras dengan skema warna yang diubah di beranda utama.
 ========================================================================
+XVI. MENAMBAHKAN MENU KELOLA KEAHLIAN ADMIN (2026-07-28)
+========================================================================
+1. Rute Baru (routes/web.php):
+   - Rute GET /portal-admin/kelola-keahlian: Untuk mengakses halaman kelola keahlian, dilindungi middleware auth, memanggil metode TampilKelolaKeahlian().
+
+2. Controller Admin (app/Http/Controllers/AdminController.php):
+   - TampilKelolaKeahlian(): Metode baru untuk memeriksa hak akses admin, memuat seluruh data keahlian dari tabel skills menggunakan Query Builder Laravel/DB (DB::table('skills')->get()), dan mengalirkan data ke View kelola_keahlian.
+
+3. File View Blade:
+   - admin/layout.blade.php: Menambahkan menu sidebar "Kelola Keahlian" di bawah "Kelola Project Saya" lengkap dengan ikon SVG bertema keahlian dan status menu aktif.
+   - admin/kelola_keahlian.blade.php: View halaman admin baru yang mewarisi layout panel admin untuk menampilkan data tabel skills secara responsif. Dilengkapi container table dengan properti overflow-x: auto sebagai pengaman visual agar tidak terpotong pada layar kecil (Rule 6).
+========================================================================
+XVII. PERBAIKAN BUG TABEL SKILLS DI DASHBOARD ADMIN (2026-07-28)
+========================================================================
+1. File View Blade (admin/kelola_keahlian.blade.php):
+   - Memperbaiki bug Undefined Property `level` dengan mengarahkannya ke kolom yang tepat di database MySQL yaitu `percentage`.
+   - Memperbaiki tabrakan nama variabel iterator loop dengan mengubah `@forelse($skills as $index => $skills)` kembali menjadi `@forelse($skills as $index => $skill)`.
+========================================================================
+XVIII. FITUR CRUD ASINKRON KELOLA KEAHLIAN (2026-07-28)
+========================================================================
+1. Rute Baru (routes/web.php):
+   - Route::post('/kelola-keahlian/simpan') : Rute simpan/update keahlian baru secara AJAX POST.
+   - Route::delete('/kelola-keahlian/delete/{id}') : Rute hapus data keahlian via AJAX DELETE.
+
+2. Controller Admin (app/Http/Controllers/AdminController.php):
+   - simpanKeahlian(): Metode asinkron baru untuk validasi input, pencegahan XSS (Rule 13), dan memproses Insert/Update ke tabel `skills` menggunakan Query Builder (Rule 12).
+   - hapusKeahlian(): Metode asinkron baru untuk memvalidasi hak akses dan menghapus data keahlian berdasarkan ID secara aman (Rule 15).
+
+3. File View Blade (admin/kelola_keahlian.blade.php):
+   - Menambahkan tombol aksi "Tambah Keahlian" pada header card.
+   - Menambahkan kolom aksi "Edit" dan "Hapus" pada baris tabel keahlian.
+   - Menyediakan Modal Form dialog bertema semi-transparan (glassmorphism) yang berisi form tambah dan edit keahlian.
+   - Mengintegrasikan jQuery AJAX asinkron untuk menyimpan data baru/perubahan, memicu reload data, serta menghapus data baris keahlian secara instan tanpa reload halaman (Rule 5).
+========================================================================
+
+
+
 
