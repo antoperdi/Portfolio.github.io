@@ -10,6 +10,15 @@
 
   <!-- Referensi Stylesheet -->
   <link rel="stylesheet" href="{{ asset('style.css') }}">
+
+  <!-- Gaya Latar Belakang Kustom Dinamis dari Database (Rule 5 & 19) -->
+  @if(isset($backgroundImage))
+  <style>
+    body {
+      background-image: linear-gradient(rgba(41, 54, 129, 0.85), rgba(41, 54, 129, 0.85)), url("{{ asset('storage/' . $backgroundImage->image_path) }}") !important;
+    }
+  </style>
+  @endif
 </head>
 
 <body>

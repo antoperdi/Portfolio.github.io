@@ -19,5 +19,6 @@ class MyGallery extends Model
         'image_path',
         'caption',
         'is_active',
+        'is_background',
     ];
 }

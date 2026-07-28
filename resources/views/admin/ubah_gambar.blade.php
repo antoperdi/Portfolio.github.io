@@ -350,9 +350,9 @@
 
 <!-- Bagian Panel Pengelolaan My Gallery (my_galleries) -->
 <div class="panel-card" style="margin-top: 30px; margin-bottom: 30px;">
-  <h3 style="font-size: 1.3rem; font-weight: 600; margin-bottom: 10px; color: var(--accent);">Kelola My Gallery (my_galleries)</h3>
+  <h3 style="font-size: 1.3rem; font-weight: 600; margin-bottom: 10px; color: var(--accent);">Kelola Galeri Aktivitas &amp; Background</h3>
   <p style="font-size: 0.85rem; color: var(--light); opacity: 0.7; margin-bottom: 25px; line-height: 1.4;">
-    Kelola gambar dari tabel <code>my_galleries</code>. Gambar disimpan di disk penyimpanan lokal (directory <code>public/storage/my_gallery</code>) dan tautannya disimpan di database MySQL.
+    Kelola gambar dari tabel <code>my_galleries</code>. Anda dapat mengunggah gambar baru, menyetelnya sebagai latar belakang (body background) halaman portofolio utama, dan mengatur apakah gambar tersebut tampil di bagian Galeri Aktivitas di halaman depan.
   </p>
 
   <!-- Form Unggah Foto My Gallery Baru -->
@@ -367,6 +367,17 @@
       <textarea id="my-gallery-caption" name="caption" placeholder="Masukkan deskripsi gambar jika ada..." style="width: 100%; height: 80px; padding: 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; color: var(--white); font-family: var(--font-main); font-size: 0.9rem; outline: none; resize: vertical; transition: border-color 0.3s;" onfocus="this.style.borderColor='var(--secondary)'" onblur="this.style.borderColor='rgba(255,255,255,0.15)'"></textarea>
     </div>
 
+    <div style="margin-bottom: 15px; display: flex; flex-direction: column; gap: 8px;">
+      <label style="display: flex; align-items: center; gap: 8px; font-size: 0.85rem; color: var(--light); font-weight: 500; cursor: pointer; user-select: none;">
+        <input type="checkbox" id="my-gallery-is-background" name="is_background" style="width: 16px; height: 16px; cursor: pointer;">
+        <span>Jadikan Background Halaman Utama</span>
+      </label>
+      <label style="display: flex; align-items: center; gap: 8px; font-size: 0.85rem; color: var(--light); font-weight: 500; cursor: pointer; user-select: none;">
+        <input type="checkbox" id="my-gallery-is-active" name="is_active" checked style="width: 16px; height: 16px; cursor: pointer;">
+        <span>Tampilkan di Galeri Aktivitas</span>
+      </label>
+    </div>
+
     <div class="file-input-wrapper">
       <input type="file" class="file-input-hidden" id="my-gallery-image-input" name="image" accept="image/jpeg,image/png,image/jpg,image/webp" required>
       <div class="file-input-label" id="my-gallery-file-label">
@@ -375,13 +386,13 @@
           <polyline points="17 8 12 3 7 8"></polyline>
           <line x1="12" y1="3" x2="12" y2="15"></line>
         </svg>
-        <span id="my-gallery-file-name-text">Pilih Gambar My Gallery...</span>
+        <span id="my-gallery-file-name-text">Pilih Gambar Galeri...</span>
       </div>
     </div>
     
     <button type="submit" class="btn-upload" id="btn-upload-my-gallery" disabled style="max-width: 250px; margin: 15px auto 0 auto;">
       <span class="spinner-upload" id="spinner-my-gallery"></span>
-      <span>Tambah ke My Gallery</span>
+      <span>Tambah Gambar</span>
     </button>
   </form>
 
@@ -399,6 +410,19 @@
               {{ html_escape($item->caption) }}
             </div>
           @endif
+          
+          <!-- Opsi Checkbox/Checklist Status Latar Belakang & Galeri Aktivitas (Rule 5 & 14) -->
+          <div style="display: flex; flex-direction: column; gap: 6px; margin: 8px 0; text-align: left; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 8px;">
+            <label style="display: flex; align-items: center; gap: 6px; font-size: 0.75rem; color: var(--light); cursor: pointer; user-select: none;">
+              <input type="checkbox" class="toggle-gallery-status" data-id="{{ $item->id }}" data-field="is_background" {{ $item->is_background ? 'checked' : '' }} style="width: 14px; height: 14px; cursor: pointer;">
+              <span style="{{ $item->is_background ? 'color: var(--accent); font-weight: 500;' : '' }}">Jadikan Background</span>
+            </label>
+            <label style="display: flex; align-items: center; gap: 6px; font-size: 0.75rem; color: var(--light); cursor: pointer; user-select: none;">
+              <input type="checkbox" class="toggle-gallery-status" data-id="{{ $item->id }}" data-field="is_active" {{ $item->is_active ? 'checked' : '' }} style="width: 14px; height: 14px; cursor: pointer;">
+              <span style="{{ $item->is_active ? 'color: var(--white);' : 'opacity: 0.5;' }}">Galeri Aktivitas</span>
+            </label>
+          </div>
+
           <button type="button" class="btn-delete-my-gallery" data-id="{{ $item->id }}">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <polyline points="3 6 5 6 21 6"></polyline>
@@ -591,7 +615,7 @@
       }
     });
 
-    // AJAX submit form tambah foto my_gallery
+    // AJAX submit form tambah foto my_gallery (Rule 5)
     $('#upload-my-gallery-form').on('submit', function(e) {
       e.preventDefault();
 
@@ -617,6 +641,14 @@
       formData.append('image', file);
       formData.append('title', title);
       formData.append('caption', caption);
+      
+      // Mengirimkan status checkbox/checklist
+      if ($('#my-gallery-is-background').is(':checked')) {
+        formData.append('is_background', '1');
+      }
+      if ($('#my-gallery-is-active').is(':checked')) {
+        formData.append('is_active', '1');
+      }
 
       submitBtn.prop('disabled', true);
       spinner.show();
@@ -634,12 +666,14 @@
         dataType: "json",
         success: function(response) {
           spinner.hide();
-          btnText.text('Tambah ke My Gallery');
+          btnText.text('Tambah Gambar');
           submitBtn.prop('disabled', true);
           fileInput.value = '';
           $('#my-gallery-title').val('');
           $('#my-gallery-caption').val('');
-          $('#my-gallery-file-name-text').text('Pilih Gambar My Gallery...');
+          $('#my-gallery-is-background').prop('checked', false);
+          $('#my-gallery-is-active').prop('checked', true);
+          $('#my-gallery-file-name-text').text('Pilih Gambar Galeri...');
 
           window.showToast('success', response.message);
           
@@ -650,10 +684,69 @@
         },
         error: function(xhr) {
           spinner.hide();
-          btnText.text('Tambah ke My Gallery');
+          btnText.text('Tambah Gambar');
           submitBtn.prop('disabled', false);
 
-          let errorMessage = 'Gagal menambahkan foto ke My Gallery.';
+          let errorMessage = 'Gagal menambahkan foto ke Galeri.';
+          if (xhr.responseJSON && xhr.responseJSON.message) {
+            errorMessage = xhr.responseJSON.message;
+          }
+          window.showToast('danger', errorMessage);
+        }
+      });
+    });
+
+    // AJAX update status checkbox (is_active / is_background) (Rule 5 & 14)
+    $(document).on('change', '.toggle-gallery-status', function() {
+      const checkbox = $(this);
+      const id = checkbox.data('id');
+      const field = checkbox.data('field');
+      const isChecked = checkbox.is(':checked') ? 1 : 0;
+      const originalState = !isChecked; // Simpan status sebelumnya jika gagal
+
+      checkbox.prop('disabled', true);
+
+      $.ajax({
+        url: "{{ url('/portal-admin/ubah-gambar/update-my-gallery-status') }}/" + id,
+        type: "POST",
+        data: {
+          field: field,
+          value: isChecked,
+          _token: csrfToken
+        },
+        dataType: "json",
+        success: function(response) {
+          checkbox.prop('disabled', false);
+          window.showToast('success', response.message);
+
+          if (field === 'is_background') {
+            if (isChecked === 1) {
+              // Jika ini dicentang, hilangkan centang is_background lain secara visual
+              $('.toggle-gallery-status[data-field="is_background"]').each(function() {
+                const other = $(this);
+                if (other.data('id') !== id) {
+                  other.prop('checked', false);
+                  other.next('span').css({'color': '', 'font-weight': ''});
+                }
+              });
+              // Sorot teks checkbox yang dicentang
+              checkbox.next('span').css({'color': 'var(--accent)', 'font-weight': '500'});
+            } else {
+              checkbox.next('span').css({'color': '', 'font-weight': ''});
+            }
+          } else if (field === 'is_active') {
+            if (isChecked === 1) {
+              checkbox.next('span').css({'color': 'var(--white)', 'opacity': '1'});
+            } else {
+              checkbox.next('span').css({'color': '', 'opacity': '0.5'});
+            }
+          }
+        },
+        error: function(xhr) {
+          checkbox.prop('disabled', false);
+          checkbox.prop('checked', originalState); // Kembalikan ke status awal
+          
+          let errorMessage = 'Gagal memperbarui status.';
           if (xhr.responseJSON && xhr.responseJSON.message) {
             errorMessage = xhr.responseJSON.message;
           }

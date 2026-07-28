@@ -385,3 +385,25 @@ XII. SISTEM DINAMIS PROJECT SAYA (TABEL PROJECT_SAYA) (2026-07-28)
    - admin/kelola_proyek.blade.php:
      * Berkas view admin baru khusus untuk menampilkan formulir kelola proyek (tambah/edit) dan daftar proyek aktif yang dilengkapi integrasi AJAX CRUD asinkron jQuery.
 ========================================================================
+
+========================================================================
+XIII. FITUR DYNAMIC BACKGROUND & CHECKLIST GALERI AKTIVITAS (2026-07-28)
+========================================================================
+1. Skema Kolom Tabel Database MySQL (Tabel: my_galleries):
+   - is_background: Menambahkan kolom baru bertipe boolean dengan nilai bawaan false untuk mendefinisikan apakah gambar tersebut diset sebagai background body.
+2. Controller Admin (app/Http/Controllers/AdminController.php):
+   - uploadMyGallery(): Memperbarui validasi dan logika agar memproses parameter checklist `is_background` dan `is_active` saat mengunggah foto baru. Jika `is_background` bernilai true, mereset status background lainnya terlebih dahulu.
+   - updateMyGalleryStatus(): Metode AJAX baru untuk mengizinkan pembaruan kolom `is_active` dan `is_background` secara langsung dari grid daftar gambar admin.
+3. Controller Portfolio (app/Http/Controllers/PortfolioController.php):
+   - index(): Memuat variabel `$backgroundImage = MyGallery::where('is_background', true)->first();` untuk dialirkan langsung ke view utama.
+4. Rute Baru (routes/web.php):
+   - Route::post('/ubah-gambar/update-my-gallery-status/{id}'): Rute AJAX untuk memanggil metode updateMyGalleryStatus di AdminController.
+5. File View Blade:
+   - admin/ubah_gambar.blade.php:
+     * Mengubah nama panel menjadi "Kelola Galeri Aktivitas & Background".
+     * Menambahkan checkbox checklist is_background & is_active pada formulir unggah gambar baru.
+     * Menyematkan checkbox is_background & is_active pada setiap gambar yang terdaftar di grid admin.
+     * Mengintegrasikan jQuery AJAX asinkron untuk memperbarui status checkbox secara instan tanpa reload, dengan logika radio-button-like behavior pada checklist background.
+   - portfolio.blade.php:
+     * Menyisipkan tag style inline kustom untuk meng-override properti CSS `body` background-image menggunakan URL gambar dari database jika `$backgroundImage` diset.
+========================================================================

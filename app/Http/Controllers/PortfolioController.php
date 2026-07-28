@@ -41,7 +41,12 @@ class PortfolioController extends Controller
         $experiences = DB::table('experiences')->orderBy('order_num', 'asc')->get();
         $achievements = DB::table('achievements')->get();
         $certifications = DB::table('certifications')->get();
+        
+        // Mengambil gambar untuk galeri yang aktif (Rule 14 & 15)
         $myGalleries = MyGallery::where('is_active', true)->get();
+        
+        // Mengambil gambar latar belakang (body background) utama jika diset
+        $backgroundImage = MyGallery::where('is_background', true)->first();
         
         // Mengambil seluruh data proyek dari tabel Project_Saya
         $projects = ProjectSaya::all();
@@ -61,6 +66,7 @@ class PortfolioController extends Controller
             'achievements',
             'certifications',
             'myGalleries',
+            'backgroundImage',
             'projects'
         ));
     }

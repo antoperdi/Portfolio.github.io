@@ -173,9 +173,11 @@ class AdminController extends Controller
 
         // Validasi gambar sisi server (maksimal 5MB)
         $validator = Validator::make($request->all(), [
-            'image'   => 'required|image|mimes:jpeg,png,jpg,webp|max:5120',
-            'title'   => 'required|string|max:255',
-            'caption' => 'nullable|string|max:1000',
+            'image'         => 'required|image|mimes:jpeg,png,jpg,webp|max:5120',
+            'title'         => 'required|string|max:255',
+            'caption'       => 'nullable|string|max:1000',
+            'is_active'     => 'nullable',
+            'is_background' => 'nullable',
         ]);
 
         if ($validator->fails()) {
@@ -188,17 +190,27 @@ class AdminController extends Controller
         $file = $request->file('image');
         $title = $request->input('title');
         $caption = $request->input('caption');
+        
+        // Membaca status checkbox dari input (Rule 13)
+        $isBackground = $request->has('is_background');
+        $isActive = $request->has('is_active');
 
         try {
             // Simpan file ke directory storage/app/public/my_gallery
             $path = $file->store('my_gallery', 'public');
 
+            // Jika checkbox is_background diaktifkan, reset background aktif lainnya terlebih dahulu
+            if ($isBackground) {
+                MyGallery::where('is_background', true)->update(['is_background' => false]);
+            }
+
             // Simpan ke database menggunakan Eloquent Model MyGallery
             MyGallery::create([
-                'title'      => $title,
-                'image_path' => $path,
-                'caption'    => $caption,
-                'is_active'  => true,
+                'title'         => $title,
+                'image_path'    => $path,
+                'caption'       => $caption,
+                'is_active'     => $isActive,
+                'is_background' => $isBackground,
             ]);
 
             return response()->json([
@@ -212,6 +224,80 @@ class AdminController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Terjadi kesalahan sistem saat menyimpan foto ke My Gallery.'
+            ], 500);
+        }
+    }
+
+    /**
+     * Memperbarui status is_active (tampil di galeri) atau is_background (latar belakang halaman) secara asinkron (AJAX).
+     * Logika ini mematikan background aktif lainnya jika gambar ini diset sebagai background.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function updateMyGalleryStatus(Request $request, $id)
+    {
+        // Pengecekan hak akses admin (Rule 15 & 17)
+        if (!auth()->check()) {
+            log_message('error', 'Security Alert: Percobaan modifikasi status my_gallery tanpa autentikasi.');
+            return response()->json(['success' => false, 'message' => 'Akses ditolak.'], 403);
+        }
+
+        // Validasi parameter request
+        $validator = Validator::make($request->all(), [
+            'field' => 'required|in:is_active,is_background',
+            'value' => 'required|boolean',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Masukan status tidak valid.'
+            ], 422);
+        }
+
+        $field = $request->input('field');
+        $value = filter_var($request->input('value'), FILTER_VALIDATE_BOOLEAN);
+
+        try {
+            // Dapatkan entri berdasarkan ID
+            $gallery = MyGallery::find($id);
+
+            if (!$gallery) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Foto tidak ditemukan.'
+                ], 404);
+            }
+
+            // Jika bidang yang dirubah adalah background dan nilainya true
+            if ($field === 'is_background') {
+                if ($value === true) {
+                    // Matikan seluruh status background lainnya terlebih dahulu
+                    MyGallery::where('is_background', true)->update(['is_background' => false]);
+                    $gallery->is_background = true;
+                } else {
+                    $gallery->is_background = false;
+                }
+            } else {
+                // Merubah status keaktifan di dalam Galeri Aktivitas
+                $gallery->is_active = $value;
+            }
+
+            $gallery->save();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Pembaruan status berhasil disimpan!'
+            ]);
+
+        } catch (\Exception $e) {
+            log_message('error', 'Error: Gagal memperbarui status gallery ID ' . $id . '. Pesan: ' . $e->getMessage());
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan sistem saat memperbarui status.'
             ], 500);
         }
     }

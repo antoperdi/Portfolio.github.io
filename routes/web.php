@@ -68,6 +68,9 @@ Route::group(['prefix' => 'portal-admin'], function () {
         // Proses Hapus Gambar My Gallery via AJAX (my_galleries)
         Route::delete('/ubah-gambar/delete-my-gallery/{id}', [AdminController::class, 'deleteMyGallery'])->name('admin.delete_my_gallery');
         
+        // Proses Update Status My Gallery via AJAX (is_active / is_background)
+        Route::post('/ubah-gambar/update-my-gallery-status/{id}', [AdminController::class, 'updateMyGalleryStatus'])->name('admin.update_my_gallery_status');
+        
         // Tampilan Halaman Kelola Proyek (Project_Saya)
         Route::get('/kelola-proyek', [AdminController::class, 'showKelolaProyek'])->name('admin.kelola_proyek');
         
