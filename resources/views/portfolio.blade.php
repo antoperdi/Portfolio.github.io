@@ -56,8 +56,7 @@
           </div>
 
           <p class="hero-subtitle">
-            Berdedikasi merancang dan membangun sistem web berkinerja tinggi yang responsif, aman, dan berestetika
-            modern. Spesialisasi dalam ekosistem PHP (Laravel, CodeIgniter), JavaScript, dan Tailwind CSS.
+            {{ html_escape($profile->title) }}
           </p>
 
           <div class="btn-group">
@@ -203,56 +202,32 @@
         <!-- Grid Portofolio Wrapper dengan Overflow Aman -->
         <div class="portfolio-grid-wrapper">
           <div class="portfolio-grid">
-            <!-- Kartu Proyek 1 -->
-            <a href="/project-detail?project=warkop-qr" class="portfolio-card show" data-category="web">
-              <div class="portfolio-img-wrapper">
-                <img src="{{ asset('foto_pribadi/readme_banner.png') }}" alt="Proyek Web E-Commerce" loading="lazy">
-              </div>
-              <div class="portfolio-info">
-                <h3>Warkop QR - Sistem Pemesanan & POS Digital</h3>
-                <p>Aplikasi Sistem Pemesanan & POS Digital yang dibangun menggunakan Laravel 12 dengan pengamanan penuh terhadap celah SQL Injection, CSRF Protection, Request Validation.</p>
-                <div class="project-tags">
-                  <span class="project-tag">Laravel 12</span>
-                  <span class="project-tag">Vanilla JavaScript</span>
-                  <span class="project-tag">Bootstrap</span>
-                  <span class="project-tag">PHP</span>
-                  <span class="project-tag">MySQL</span>
-                  <span class="project-tag">Tailwind CSS</span>
+            @forelse($projects as $project)
+              <a href="{{ url('/project-detail?project=' . $project->id) }}" class="portfolio-card show" data-category="{{ html_escape($project->Kategori) }}">
+                <div class="portfolio-img-wrapper">
+                  @php
+                    $isFallback = in_array($project->image_path, ['readme_banner.png', 'IMG_20260226_045149_015.webp', 'halaman login.png']);
+                    $imageSrc = $isFallback ? asset('foto_pribadi/' . $project->image_path) : asset('storage/' . $project->image_path);
+                  @endphp
+                  <img src="{{ $imageSrc }}" alt="{{ html_escape($project->nama) }}" loading="lazy">
                 </div>
-              </div>
-            </a>
-
-            <!-- Kartu Proyek 2 -->
-            <a href="/project-detail?project=dashboard-finansial" class="portfolio-card show" data-category="design">
-              <div class="portfolio-img-wrapper">
-                <img src="{{ asset('foto_pribadi/IMG_20260226_045149_015.webp') }}" alt="Proyek UI/UX Dashboard Keuangan" loading="lazy">
-              </div>
-              <div class="portfolio-info">
-                <h3>Dashboard Finansial Modern</h3>
-                <p>Desain antarmuka dashboard keuangan interaktif dengan konsep Glassmorphism, berfokus pada kemudahan membaca visualisasi grafik data.</p>
-                <div class="project-tags">
-                  <span class="project-tag">Figma</span>
-                  <span class="project-tag">UI/UX</span>
-                  <span class="project-tag">Glassmorphism</span>
+                <div class="portfolio-info">
+                  <h3>{{ html_escape($project->nama) }}</h3>
+                  <p>{{ html_escape($project->caption) }}</p>
+                  <div class="project-tags">
+                    @foreach(explode(',', $project->Teknologi) as $tag)
+                      @if(trim($tag) !== '')
+                        <span class="project-tag">{{ html_escape(trim($tag)) }}</span>
+                      @endif
+                    @endforeach
+                  </div>
                 </div>
+              </a>
+            @empty
+              <div style="grid-column: 1/-1; text-align: center; color: var(--light); opacity: 0.6; padding: 40px 0;">
+                Belum ada proyek yang dipublikasikan.
               </div>
-            </a>
-
-            <!-- Kartu Proyek 3 -->
-            <a href="/project-detail?project=portal-berita" class="portfolio-card show" data-category="web">
-              <div class="portfolio-img-wrapper">
-                <img src="{{ asset('foto_pribadi/halaman login.png') }}" alt="Proyek Sistem Kesehatan Laboratorium" loading="lazy">
-              </div>
-              <div class="portfolio-info">
-                <h3>Sistem Kesehatan Laboratorium UPTD Labkes Kota Pangkalpinang</h3>
-                <p>Aplikasi Sistem Informasi Kesehatan Laboratorium UPTD Labkes Kota Pangkalpinang merupakan solusi digital berbasis web yang dirancang untuk mengintegrasikan dan mengoptimalkan seluruh alur pelayanan laboratorium kesehatan masyarakat...</p>
-                <div class="project-tags">
-                  <span class="project-tag">HTML5</span>
-                  <span class="project-tag">Vanilla CSS</span>
-                  <span class="project-tag">JavaScript ES6</span>
-                </div>
-              </div>
-            </a>
+            @endforelse
           </div>
         </div>
       </div>
@@ -267,12 +242,15 @@
  
         <div class="gallery-grid-wrapper">
           <div class="gallery-grid">
-            @forelse($galleries as $item)
+            @forelse($myGalleries as $item)
               <!-- Gambar Galeri Dinamis dari Database -->
               <div class="gallery-item">
-                <img src="{{ url('/gallery/image/' . $item->id) }}" alt="{{ html_escape($item->name) }}" class="gallery-img" loading="lazy">
+                <img src="{{ asset('storage/' . $item->image_path) }}" alt="{{ html_escape($item->title) }}" class="gallery-img" loading="lazy">
                 <div class="gallery-overlay">
-                  <p>{{ html_escape($item->name) }}</p>
+                  <p>{{ html_escape($item->title) }}</p>
+                  @if($item->caption)
+                    <span style="font-size: 0.75rem; color: var(--light); opacity: 0.8; display: block; margin-top: 5px;">{{ html_escape($item->caption) }}</span>
+                  @endif
                 </div>
               </div>
             @empty

@@ -8,10 +8,8 @@ use Illuminate\Support\Facades\Route;
 // Rute Portfolio Utama (Dinamis dari database MySQL)
 Route::get('/', [PortfolioController::class, 'index']);
 
-// Rute Detail Proyek
-Route::get('/project-detail', function () {
-    return view('project-detail');
-});
+// Rute Detail Proyek (Dinamis dari database MySQL)
+Route::get('/project-detail', [PortfolioController::class, 'showProjectDetail']);
 
 // Rute untuk menyajikan gambar langsung dari kolom BLOB database MySQL
 Route::get('/profile/image/{type}', function ($type) {
@@ -44,11 +42,6 @@ Route::get('/profile/image/{type}', function ($type) {
         ->header('Cache-Control', 'public, max-age=86400');
 });
 
-// Rute untuk menyajikan gambar galeri langsung dari tabel gallery_me database MySQL
-Route::get('/gallery/image/{id}', [PortfolioController::class, 'serveGalleryImage'])->name('gallery.image');
-
-// Rute untuk menyajikan gambar galeri proyek dari tabel projects_gallery database MySQL
-Route::get('/projects-gallery/image/{id}', [PortfolioController::class, 'serveProjectsGalleryImage'])->name('projects_gallery.image');
 
 // Grup Rute Admin (dengan URL akses unik /portal-admin)
 Route::group(['prefix' => 'portal-admin'], function () {
@@ -69,17 +62,20 @@ Route::group(['prefix' => 'portal-admin'], function () {
         // Proses Unggah Gambar Hero/About via AJAX (Dibatasi 10 kali per menit per user untuk keamanan)
         Route::post('/ubah-gambar/upload', [AdminController::class, 'uploadGambar'])->middleware('throttle:10,1');
         
-        // Proses Unggah Gambar Galeri Baru via AJAX (Dibatasi 10 kali per menit per user untuk keamanan)
-        Route::post('/ubah-gambar/upload-gallery', [AdminController::class, 'uploadGallery'])->middleware('throttle:10,1');
+        // Proses Unggah Gambar My Gallery Baru via AJAX (my_galleries)
+        Route::post('/ubah-gambar/upload-my-gallery', [AdminController::class, 'uploadMyGallery'])->middleware('throttle:10,1');
         
-        // Proses Hapus Gambar Galeri via AJAX
-        Route::delete('/ubah-gambar/delete-gallery/{id}', [AdminController::class, 'deleteGallery'])->name('admin.delete_gallery');
-
-        // Proses Unggah Gambar Galeri Proyek Baru via AJAX (projects_gallery)
-        Route::post('/ubah-gambar/upload-projects-gallery', [AdminController::class, 'uploadProjectsGallery'])->middleware('throttle:10,1');
+        // Proses Hapus Gambar My Gallery via AJAX (my_galleries)
+        Route::delete('/ubah-gambar/delete-my-gallery/{id}', [AdminController::class, 'deleteMyGallery'])->name('admin.delete_my_gallery');
         
-        // Proses Hapus Gambar Galeri Proyek via AJAX (projects_gallery)
-        Route::delete('/ubah-gambar/delete-projects-gallery/{id}', [AdminController::class, 'deleteProjectsGallery'])->name('admin.delete_projects_gallery');
+        // Tampilan Halaman Kelola Proyek (Project_Saya)
+        Route::get('/kelola-proyek', [AdminController::class, 'showKelolaProyek'])->name('admin.kelola_proyek');
+        
+        // Proses Unggah/Edit Project Saya via AJAX (Project_Saya)
+        Route::post('/kelola-proyek/upload', [AdminController::class, 'uploadProject'])->middleware('throttle:15,1');
+        
+        // Proses Hapus Project Saya via AJAX (Project_Saya)
+        Route::delete('/kelola-proyek/delete/{id}', [AdminController::class, 'deleteProject'])->name('admin.delete_project');
         
         // Proses Keluar (Logout)
         Route::get('/logout', [AuthController::class, 'logout'])->name('admin.logout');

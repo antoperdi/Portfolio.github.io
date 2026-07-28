@@ -5,8 +5,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 use App\Http\Controllers\Controller;
 use App\Models\Profile;
-use App\Models\GalleryMe;
-use App\Models\ProjectsGallery;
+use App\Models\MyGallery;
+use App\Models\ProjectSaya;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class PortfolioController extends Controller
@@ -40,8 +41,10 @@ class PortfolioController extends Controller
         $experiences = DB::table('experiences')->orderBy('order_num', 'asc')->get();
         $achievements = DB::table('achievements')->get();
         $certifications = DB::table('certifications')->get();
-        $galleries = GalleryMe::all();
-        $projectsGalleries = ProjectsGallery::all();
+        $myGalleries = MyGallery::where('is_active', true)->get();
+        
+        // Mengambil seluruh data proyek dari tabel Project_Saya
+        $projects = ProjectSaya::all();
 
         // Mengelompokkan skill berdasarkan kategori untuk memudahkan render tabel di view
         $groupedSkills = [];
@@ -57,46 +60,24 @@ class PortfolioController extends Controller
             'experiences',
             'achievements',
             'certifications',
-            'galleries',
-            'projectsGalleries'
+            'myGalleries',
+            'projects'
         ));
     }
 
     /**
-     * Menyajikan data biner (BLOB) gambar galeri langsung dari tabel gallery_me database MySQL.
+     * Menampilkan halaman detail proyek dinamis berdasarkan query parameter 'project' (ID).
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\View\View
      */
-    public function serveGalleryImage($id)
+    public function showProjectDetail(Request $request)
     {
-        $gallery = GalleryMe::find($id);
+        $projectId = $request->query('project');
         
-        if (!$gallery || empty($gallery->gallery)) {
-            abort(404);
-        }
+        // Cari proyek berdasarkan ID di tabel Project_Saya menggunakan Eloquent
+        $project = ProjectSaya::find($projectId);
 
-        return response($gallery->gallery)
-            ->header('Content-Type', 'image/jpeg')
-            ->header('Cache-Control', 'public, max-age=86400');
-    }
-
-    /**
-     * Menyajikan data biner (BLOB) gambar galeri proyek langsung dari tabel projects_gallery database MySQL.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function serveProjectsGalleryImage($id)
-    {
-        $gallery = ProjectsGallery::find($id);
-        
-        if (!$gallery || empty($gallery->gallery)) {
-            abort(404);
-        }
-
-        return response($gallery->gallery)
-            ->header('Content-Type', 'image/jpeg')
-            ->header('Cache-Control', 'public, max-age=86400');
+        return view('project-detail', compact('project'));
     }
 }
