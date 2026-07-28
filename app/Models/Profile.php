@@ -37,6 +37,8 @@ class Profile extends Model
         'primary_color',
         'secondary_color',
         'accent_color',
+        'primary_opacity',
+        'navigator_color',
     ];
 
     /**

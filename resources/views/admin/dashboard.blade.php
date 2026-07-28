@@ -255,6 +255,29 @@
           <input type="text" id="accent_color_text" value="{{ $profile->accent_color ?? '#95CCDD' }}" style="flex: 1; padding: 10px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; color: var(--white); font-family: var(--font-main); font-size: 0.9rem; text-transform: uppercase;" placeholder="#95CCDD">
         </div>
       </div>
+
+      <!-- Warna Navigator -->
+      <div style="flex: 1; min-width: 180px;">
+        <label for="navigator_color" style="display: block; font-size: 0.85rem; color: var(--light); margin-bottom: 8px; font-weight: 500;">Warna Navigator (Header & Footer)</label>
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <input type="color" id="navigator_color" name="navigator_color" value="{{ $profile->navigator_color ?? '#293681' }}" style="width: 45px; height: 45px; border: none; border-radius: 8px; cursor: pointer; background: none;">
+          <input type="text" id="navigator_color_text" value="{{ $profile->navigator_color ?? '#293681' }}" style="flex: 1; padding: 10px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; color: var(--white); font-family: var(--font-main); font-size: 0.9rem; text-transform: uppercase;" placeholder="#293681">
+        </div>
+      </div>
+    </div>
+
+    <!-- Baris Kedua: Pengatur Transparansi Background (Warna Utama) -->
+    <div style="margin-bottom: 30px; max-width: 500px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); padding: 20px; border-radius: 12px;">
+      <label for="primary_opacity" style="display: block; font-size: 0.85rem; color: var(--light); margin-bottom: 12px; font-weight: 500;">
+        Transparansi Overlay Background Halaman Utama: <strong id="primary_opacity_value">{{ intval(($profile->primary_opacity ?? 0.85) * 100) }}%</strong>
+      </label>
+      <div style="display: flex; align-items: center; gap: 15px;">
+        <input type="range" id="primary_opacity" name="primary_opacity" min="0" max="1" step="0.05" value="{{ $profile->primary_opacity ?? 0.85 }}" style="flex: 1; accent-color: var(--accent); cursor: pointer; height: 6px; border-radius: 3px; background: rgba(255,255,255,0.15);">
+        <span id="primary_opacity_num" style="font-size: 0.85rem; color: var(--light); min-width: 35px; text-align: right; font-weight: 600;">{{ $profile->primary_opacity ?? '0.85' }}</span>
+      </div>
+      <small style="display: block; font-size: 0.75rem; color: var(--light); opacity: 0.5; margin-top: 8px;">
+        *Geser ke kanan untuk membuat overlay semakin tebal (solid), geser ke kiri untuk semakin transparan.
+      </small>
     </div>
 
     <div style="display: flex; gap: 15px; flex-wrap: wrap;">
@@ -307,6 +330,23 @@
       }
     });
 
+    $('#navigator_color').on('input', function() {
+      $('#navigator_color_text').val($(this).val());
+    });
+    $('#navigator_color_text').on('input', function() {
+      const val = $(this).val();
+      if(/^#[0-9A-F]{6}$/i.test(val)) {
+        $('#navigator_color').val(val);
+      }
+    });
+
+    // Update label angka transparansi saat range digeser
+    $('#primary_opacity').on('input', function() {
+      const val = $(this).val();
+      $('#primary_opacity_value').text(Math.round(val * 100) + '%');
+      $('#primary_opacity_num').text(val);
+    });
+
     // Submit form simpan warna via AJAX (Rule 5)
     $('#theme-color-form').on('submit', function(e) {
       e.preventDefault();
@@ -314,6 +354,8 @@
       const primary = $('#primary_color').val();
       const secondary = $('#secondary_color').val();
       const accent = $('#accent_color').val();
+      const navigator = $('#navigator_color').val();
+      const opacity = $('#primary_opacity').val();
 
       const btn = $('#btn-save-colors');
       const spinner = $('#spinner-colors');
@@ -330,6 +372,8 @@
           primary_color: primary,
           secondary_color: secondary,
           accent_color: accent,
+          navigator_color: navigator,
+          primary_opacity: opacity,
           _token: csrfToken
         },
         dataType: "json",
@@ -387,6 +431,11 @@
           $('#secondary_color_text').val('#4274D9');
           $('#accent_color').val('#95CCDD');
           $('#accent_color_text').val('#95CCDD');
+          $('#navigator_color').val('#293681');
+          $('#navigator_color_text').val('#293681');
+          $('#primary_opacity').val(0.85);
+          $('#primary_opacity_value').text('85%');
+          $('#primary_opacity_num').text('0.85');
 
           window.showToast('success', response.message);
         },

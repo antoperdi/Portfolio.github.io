@@ -11,14 +11,15 @@
   <!-- Referensi Stylesheet -->
   <link rel="stylesheet" href="{{ asset('style.css') }}">
 
-  <!-- Gaya Latar Belakang Kustom Dinamis dari Database (Rule 5 & 19) -->
-  @if(isset($backgroundImage))
+  <!-- Gaya Latar Belakang Kustom Dinamis (Warna Utama & Transparansi) (Rule 5, 6 & 19) -->
   <style>
     body {
-      background-image: linear-gradient(rgba(41, 54, 129, 0.85), rgba(41, 54, 129, 0.85)), url("{{ asset('storage/' . $backgroundImage->image_path) }}") !important;
+      background-image: linear-gradient(
+        rgba({{ hex_to_rgb($profile->primary_color ?? '#293681') }}, {{ $profile->primary_opacity ?? '0.85' }}), 
+        rgba({{ hex_to_rgb($profile->primary_color ?? '#293681') }}, {{ $profile->primary_opacity ?? '0.85' }})
+      ), url("{{ isset($backgroundImage) ? asset('storage/' . $backgroundImage->image_path) : asset('foto_pribadi/latar_belakang_portfolio.png') }}") !important;
     }
   </style>
-  @endif
 
   <!-- Kustomisasi Warna Tema Dinamis dari Database (Rule 5, 6, & 19) -->
   <style>
@@ -35,6 +36,26 @@
         --accent: {{ $profile->accent_color }};
         --accent-rgb: {{ hex_to_rgb($profile->accent_color) }};
       @endif
+      @if(!empty($profile->navigator_color))
+        --navigator: {{ $profile->navigator_color }};
+        --navigator-rgb: {{ hex_to_rgb($profile->navigator_color) }};
+      @else
+        --navigator: {{ $profile->primary_color ?? '#293681' }};
+        --navigator-rgb: {{ hex_to_rgb($profile->primary_color ?? '#293681') }};
+      @endif
+    }
+
+    /* Aplikasi Dinamis Warna Navigator (Rule 6) */
+    .navbar {
+      background: rgba(var(--navigator-rgb), 0.85) !important;
+    }
+    footer {
+      background-color: rgba(var(--navigator-rgb), 0.5) !important;
+    }
+    @media (max-width: 768px) {
+      .nav-links {
+        background-color: var(--navigator) !important;
+      }
     }
   </style>
 </head>

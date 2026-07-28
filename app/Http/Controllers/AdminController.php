@@ -49,18 +49,20 @@ class AdminController extends Controller
             return response()->json(['success' => false, 'message' => 'Akses ditolak.'], 403);
         }
 
-        // Validasi input warna berupa kode HEX valid (Rule 13)
+        // Validasi input warna berupa kode HEX valid dan opasitas desimal (Rule 13)
         $validator = Validator::make($request->all(), [
             'primary_color'   => 'nullable|string|regex:/^#[a-fA-F0-9]{6}$/',
             'secondary_color' => 'nullable|string|regex:/^#[a-fA-F0-9]{6}$/',
             'accent_color'    => 'nullable|string|regex:/^#[a-fA-F0-9]{6}$/',
+            'primary_opacity' => 'nullable|numeric|between:0,1',
+            'navigator_color' => 'nullable|string|regex:/^#[a-fA-F0-9]{6}$/',
             'reset'           => 'nullable|boolean',
         ]);
 
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
-                'message' => 'Validasi gagal. Pastikan format warna adalah kode HEX valid (misal: #293681).'
+                'message' => 'Validasi gagal. Pastikan format warna adalah kode HEX valid (misal: #293681) dan opasitas antara 0 dan 1.'
             ], 422);
         }
 
@@ -74,15 +76,19 @@ class AdminController extends Controller
             }
 
             if ($request->input('reset')) {
-                // Reset warna tema ke NULL (kembali ke default CSS)
+                // Reset warna tema ke NULL / Default (kembali ke default CSS)
                 $profile->primary_color = null;
                 $profile->secondary_color = null;
                 $profile->accent_color = null;
+                $profile->primary_opacity = '0.85';
+                $profile->navigator_color = null;
             } else {
                 // Perbarui warna sesuai input
                 $profile->primary_color = $request->input('primary_color');
                 $profile->secondary_color = $request->input('secondary_color');
                 $profile->accent_color = $request->input('accent_color');
+                $profile->primary_opacity = $request->input('primary_opacity', '0.85');
+                $profile->navigator_color = $request->input('navigator_color');
             }
 
             $profile->save();

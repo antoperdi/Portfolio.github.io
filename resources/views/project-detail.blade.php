@@ -14,6 +14,17 @@
   @if(isset($profile))
   <!-- Kustomisasi Warna Tema Dinamis dari Database (Rule 5, 6, & 19) -->
   <style>
+    body {
+      background-image: linear-gradient(
+        rgba({{ hex_to_rgb($profile->primary_color ?? '#293681') }}, {{ $profile->primary_opacity ?? '0.85' }}), 
+        rgba({{ hex_to_rgb($profile->primary_color ?? '#293681') }}, {{ $profile->primary_opacity ?? '0.85' }})
+      ), url('{{ asset('foto_pribadi/latar_belakang_portfolio.png') }}') !important;
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      background-repeat: no-repeat;
+    }
+
     :root {
       @if(!empty($profile->primary_color))
         --primary: {{ $profile->primary_color }};
@@ -26,6 +37,13 @@
       @if(!empty($profile->accent_color))
         --accent: {{ $profile->accent_color }};
         --accent-rgb: {{ hex_to_rgb($profile->accent_color) }};
+      @endif
+      @if(!empty($profile->navigator_color))
+        --navigator: {{ $profile->navigator_color }};
+        --navigator-rgb: {{ hex_to_rgb($profile->navigator_color) }};
+      @else
+        --navigator: {{ $profile->primary_color ?? '#293681' }};
+        --navigator-rgb: {{ hex_to_rgb($profile->primary_color ?? '#293681') }};
       @endif
     }
   </style>

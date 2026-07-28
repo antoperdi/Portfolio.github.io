@@ -435,3 +435,26 @@ XIV. KUSTOMISASI WARNA TEMA DINAMIS PORTFOLIO (2026-07-28)
    - project-detail.blade.php:
      * Menambahkan stylesheet override dinamis serupa pada tag head untuk menyelaraskan skema warna detail proyek dengan warna kustom database.
 ========================================================================
+XV. KUSTOMISASI TRANSPARANSI WARNA UTAMA & WARNA NAVIGATOR (2026-07-28)
+========================================================================
+1. Skema Kolom Tabel Database MySQL (Tabel: profile):
+   - primary_opacity: Menambahkan kolom baru bertipe VARCHAR(10) dengan nilai bawaan '0.85' untuk menyimpan nilai transparansi overlay background utama.
+   - navigator_color: Menambahkan kolom baru bertipe VARCHAR(10) untuk menyimpan warna kustom Header (Navbar) dan Footer.
+
+2. Model Profil Kustom (app/Models/Profile.php):
+   - $fillable: Menambahkan primary_opacity dan navigator_color agar mass-assignable.
+
+3. Controller Admin (app/Http/Controllers/AdminController.php):
+   - updateThemeColors(): Memperbarui validasi input untuk mendukung primary_opacity (desimal 0-1) dan navigator_color (kode HEX). Logika reset disesuaikan untuk mengembalikan primary_opacity ke '0.85' dan navigator_color ke NULL.
+
+4. File View Blade:
+   - admin/dashboard.blade.php:
+     * Menambahkan form input range slider untuk mengatur transparansi warna utama (primary_opacity) dan input warna tambahan untuk warna navigator (navigator_color).
+     * Memperbarui JavaScript jQuery AJAX untuk mengirimkan data ini ke server serta menangani sinkronisasi nilai range slider ke label persentase secara real-time.
+   - portfolio.blade.php:
+     * Menerapkan warna utama dan opasitas dinamis pada linear-gradient background body utama.
+     * Menerapkan warna navigator secara dinamis pada .navbar, footer, dan menu mobile (.nav-links) menggunakan variabel CSS baru --navigator dan --navigator-rgb.
+   - project-detail.blade.php:
+     * Menambahkan sinkronisasi CSS variabel --navigator dan linear-gradient background pada body halaman detail agar selaras dengan skema warna yang diubah di beranda utama.
+========================================================================
+
