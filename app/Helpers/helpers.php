@@ -45,3 +45,33 @@ if (!function_exists('log_message')) {
         }
     }
 }
+
+if (!function_exists('hex_to_rgb')) {
+    /**
+     * Mengubah kode warna HEX ke format deret angka RGB (misal: #293681 -> 41, 54, 129).
+     *
+     * @param  string  $hex
+     * @return string
+     */
+    function hex_to_rgb($hex)
+    {
+        // Hilangkan simbol # jika ada
+        $hex = str_replace("#", "", $hex);
+        
+        // Cek panjang karakter hex
+        if (strlen($hex) == 3) {
+            $r = hexdec(substr($hex, 0, 1) . substr($hex, 0, 1));
+            $g = hexdec(substr($hex, 1, 1) . substr($hex, 1, 1));
+            $b = hexdec(substr($hex, 2, 1) . substr($hex, 2, 1));
+        } else if (strlen($hex) == 6) {
+            $r = hexdec(substr($hex, 0, 2));
+            $g = hexdec(substr($hex, 2, 2));
+            $b = hexdec(substr($hex, 4, 2));
+        } else {
+            return '0, 0, 0';
+        }
+        
+        return "$r, $g, $b";
+    }
+}
+

@@ -117,6 +117,21 @@
   .btn-quick-outline:hover {
     background: rgba(255, 255, 255, 0.08);
   }
+
+  /* Spinner visual loading (Rule 6) */
+  .spinner-upload {
+    width: 14px;
+    height: 14px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: var(--white);
+    animation: spin 0.8s linear infinite;
+    display: none;
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
 </style>
 @endsection
 
@@ -204,4 +219,190 @@
     </div>
   </div>
 </div>
+
+<!-- Panel Kustomisasi Warna Tema (Rule 5 & 6) -->
+<div class="panel-card" style="margin-top: 30px; margin-bottom: 30px;">
+  <h3 style="font-size: 1.3rem; font-weight: 600; margin-bottom: 10px; color: var(--accent);">Kustomisasi Warna Tema Portofolio</h3>
+  <p style="font-size: 0.85rem; color: var(--light); opacity: 0.7; margin-bottom: 25px; line-height: 1.4;">
+    Sesuaikan skema warna pada halaman utama portfolio Anda dan halaman detail proyek. Perubahan warna akan langsung diterapkan secara instan menggunakan variabel CSS kustom.
+  </p>
+
+  <form id="theme-color-form" style="width: 100%; text-align: left;">
+    <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 25px;">
+      <!-- Warna Utama -->
+      <div style="flex: 1; min-width: 180px;">
+        <label for="primary_color" style="display: block; font-size: 0.85rem; color: var(--light); margin-bottom: 8px; font-weight: 500;">Warna Utama (Primary)</label>
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <input type="color" id="primary_color" name="primary_color" value="{{ $profile->primary_color ?? '#293681' }}" style="width: 45px; height: 45px; border: none; border-radius: 8px; cursor: pointer; background: none;">
+          <input type="text" id="primary_color_text" value="{{ $profile->primary_color ?? '#293681' }}" style="flex: 1; padding: 10px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; color: var(--white); font-family: var(--font-main); font-size: 0.9rem; text-transform: uppercase;" placeholder="#293681">
+        </div>
+      </div>
+
+      <!-- Warna Sekunder -->
+      <div style="flex: 1; min-width: 180px;">
+        <label for="secondary_color" style="display: block; font-size: 0.85rem; color: var(--light); margin-bottom: 8px; font-weight: 500;">Warna Sekunder (Secondary)</label>
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <input type="color" id="secondary_color" name="secondary_color" value="{{ $profile->secondary_color ?? '#4274D9' }}" style="width: 45px; height: 45px; border: none; border-radius: 8px; cursor: pointer; background: none;">
+          <input type="text" id="secondary_color_text" value="{{ $profile->secondary_color ?? '#4274D9' }}" style="flex: 1; padding: 10px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; color: var(--white); font-family: var(--font-main); font-size: 0.9rem; text-transform: uppercase;" placeholder="#4274D9">
+        </div>
+      </div>
+
+      <!-- Warna Aksen -->
+      <div style="flex: 1; min-width: 180px;">
+        <label for="accent_color" style="display: block; font-size: 0.85rem; color: var(--light); margin-bottom: 8px; font-weight: 500;">Warna Sorotan (Accent)</label>
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <input type="color" id="accent_color" name="accent_color" value="{{ $profile->accent_color ?? '#95CCDD' }}" style="width: 45px; height: 45px; border: none; border-radius: 8px; cursor: pointer; background: none;">
+          <input type="text" id="accent_color_text" value="{{ $profile->accent_color ?? '#95CCDD' }}" style="flex: 1; padding: 10px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; color: var(--white); font-family: var(--font-main); font-size: 0.9rem; text-transform: uppercase;" placeholder="#95CCDD">
+        </div>
+      </div>
+    </div>
+
+    <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+      <button type="submit" class="btn-quick" id="btn-save-colors" style="border: none; cursor: pointer; height: auto;">
+        <span class="spinner-upload" id="spinner-colors" style="width: 14px; height: 14px; margin-right: 5px;"></span>
+        <span>Simpan Warna</span>
+      </button>
+      <button type="button" class="btn-quick btn-quick-outline" id="btn-reset-colors" style="border: 1px solid var(--card-border); cursor: pointer;">
+        <span class="spinner-upload" id="spinner-reset" style="width: 14px; height: 14px; margin-right: 5px;"></span>
+        <span>Reset Default</span>
+      </button>
+    </div>
+  </form>
+</div>
+@endsection
+
+@section('scripts')
+<script>
+  $(document).ready(function() {
+    const csrfToken = $('meta[name="csrf-token"]').attr('content');
+
+    // Sinkronisasi input color picker dengan input text
+    $('#primary_color').on('input', function() {
+      $('#primary_color_text').val($(this).val());
+    });
+    $('#primary_color_text').on('input', function() {
+      const val = $(this).val();
+      if(/^#[0-9A-F]{6}$/i.test(val)) {
+        $('#primary_color').val(val);
+      }
+    });
+
+    $('#secondary_color').on('input', function() {
+      $('#secondary_color_text').val($(this).val());
+    });
+    $('#secondary_color_text').on('input', function() {
+      const val = $(this).val();
+      if(/^#[0-9A-F]{6}$/i.test(val)) {
+        $('#secondary_color').val(val);
+      }
+    });
+
+    $('#accent_color').on('input', function() {
+      $('#accent_color_text').val($(this).val());
+    });
+    $('#accent_color_text').on('input', function() {
+      const val = $(this).val();
+      if(/^#[0-9A-F]{6}$/i.test(val)) {
+        $('#accent_color').val(val);
+      }
+    });
+
+    // Submit form simpan warna via AJAX (Rule 5)
+    $('#theme-color-form').on('submit', function(e) {
+      e.preventDefault();
+
+      const primary = $('#primary_color').val();
+      const secondary = $('#secondary_color').val();
+      const accent = $('#accent_color').val();
+
+      const btn = $('#btn-save-colors');
+      const spinner = $('#spinner-colors');
+      const btnText = btn.find('span:last-child');
+
+      btn.prop('disabled', true);
+      spinner.css('display', 'inline-block');
+      btnText.text('Menyimpan...');
+
+      $.ajax({
+        url: "{{ url('/portal-admin/dashboard/update-colors') }}",
+        type: "POST",
+        data: {
+          primary_color: primary,
+          secondary_color: secondary,
+          accent_color: accent,
+          _token: csrfToken
+        },
+        dataType: "json",
+        success: function(response) {
+          spinner.hide();
+          btnText.text('Simpan Warna');
+          btn.prop('disabled', false);
+          window.showToast('success', response.message);
+        },
+        error: function(xhr) {
+          spinner.hide();
+          btnText.text('Simpan Warna');
+          btn.prop('disabled', false);
+
+          let errorMessage = 'Gagal menyimpan warna tema.';
+          if (xhr.responseJSON && xhr.responseJSON.message) {
+            errorMessage = xhr.responseJSON.message;
+          }
+          window.showToast('danger', errorMessage);
+        }
+      });
+    });
+
+    // Reset warna tema ke default
+    $('#btn-reset-colors').on('click', function() {
+      if(!confirm('Apakah Anda yakin ingin meriset skema warna kembali ke pengaturan bawaan CSS?')) {
+        return;
+      }
+
+      const btn = $(this);
+      const spinner = $('#spinner-reset');
+      const btnText = btn.find('span:last-child');
+
+      btn.prop('disabled', true);
+      spinner.css('display', 'inline-block');
+      btnText.text('Mereset...');
+
+      $.ajax({
+        url: "{{ url('/portal-admin/dashboard/update-colors') }}",
+        type: "POST",
+        data: {
+          reset: 1,
+          _token: csrfToken
+        },
+        dataType: "json",
+        success: function(response) {
+          spinner.hide();
+          btnText.text('Reset Default');
+          btn.prop('disabled', false);
+
+          // Reset input ke warna fallback
+          $('#primary_color').val('#293681');
+          $('#primary_color_text').val('#293681');
+          $('#secondary_color').val('#4274D9');
+          $('#secondary_color_text').val('#4274D9');
+          $('#accent_color').val('#95CCDD');
+          $('#accent_color_text').val('#95CCDD');
+
+          window.showToast('success', response.message);
+        },
+        error: function(xhr) {
+          spinner.hide();
+          btnText.text('Reset Default');
+          btn.prop('disabled', false);
+
+          let errorMessage = 'Gagal meriset warna tema.';
+          if (xhr.responseJSON && xhr.responseJSON.message) {
+            errorMessage = xhr.responseJSON.message;
+          }
+          window.showToast('danger', errorMessage);
+        }
+      });
+    });
+  });
+</script>
 @endsection

@@ -407,3 +407,31 @@ XIII. FITUR DYNAMIC BACKGROUND & CHECKLIST GALERI AKTIVITAS (2026-07-28)
    - portfolio.blade.php:
      * Menyisipkan tag style inline kustom untuk meng-override properti CSS `body` background-image menggunakan URL gambar dari database jika `$backgroundImage` diset.
 ========================================================================
+
+========================================================================
+XIV. KUSTOMISASI WARNA TEMA DINAMIS PORTFOLIO (2026-07-28)
+========================================================================
+1. Skema Kolom Tabel Database MySQL (Tabel: profile):
+   - primary_color: Menambahkan kolom baru bertipe VARCHAR(10) untuk menyimpan warna dasar utama.
+   - secondary_color: Menambahkan kolom baru bertipe VARCHAR(10) untuk menyimpan warna aksen sekunder.
+   - accent_color: Menambahkan kolom baru bertipe VARCHAR(10) untuk menyimpan warna sorotan/terang.
+2. Helper Global Kustom (app/Helpers/helpers.php):
+   - hex_to_rgb(): Fungsi baru untuk mengonversi nilai warna HEX menjadi string deret angka RGB (misal: #293681 -> 41, 54, 129).
+3. Model Profil Kustom (app/Models/Profile.php):
+   - $fillable: Menambahkan primary_color, secondary_color, dan accent_color agar mass-assignable.
+4. Controller Admin (app/Http/Controllers/AdminController.php):
+   - index(): Memuat baris profil pertama ($profile = Profile::first()) untuk dikirimkan sebagai data default form warna di dashboard.
+   - updateThemeColors(): Metode baru untuk menangani request AJAX update warna tema (primary, secondary, accent) atau mereset nilainya kembali ke default CSS.
+5. Controller Portfolio (app/Http/Controllers/PortfolioController.php):
+   - showProjectDetail(): Memperbarui logika pencarian agar ikut memuat profil ($profile = Profile::first()) dan mengirimkannya ke view detail proyek.
+6. Rute Baru (routes/web.php):
+   - Route::post('/dashboard/update-colors'): Rute AJAX untuk menyimpan perubahan kustomisasi warna di dashboard.
+7. File View Blade:
+   - admin/dashboard.blade.php:
+     * Menambahkan form kustomisasi skema warna dengan input type color & text.
+     * Menyertakan jQuery AJAX asinkron untuk menyimpan dan mereset warna tema secara seamless.
+   - portfolio.blade.php:
+     * Menambahkan stylesheet override dinamis pada tag head untuk menimpa variabel CSS root (--primary, --secondary, --accent beserta komponen RGB-nya) jika diset di database.
+   - project-detail.blade.php:
+     * Menambahkan stylesheet override dinamis serupa pada tag head untuk menyelaraskan skema warna detail proyek dengan warna kustom database.
+========================================================================

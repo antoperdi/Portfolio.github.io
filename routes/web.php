@@ -55,6 +55,9 @@ Route::group(['prefix' => 'portal-admin'], function () {
     Route::middleware(['auth'])->group(function () {
         // Halaman Dashboard Admin
         Route::get('/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
+
+        // Proses Update Warna Tema Portofolio via AJAX (Rule 5)
+        Route::post('/dashboard/update-colors', [AdminController::class, 'updateThemeColors'])->name('admin.update_theme_colors');
         
         // Tampilan Halaman Ubah Gambar
         Route::get('/ubah-gambar', [AdminController::class, 'showUbahGambar'])->name('admin.ubah_gambar');

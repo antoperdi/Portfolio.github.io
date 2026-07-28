@@ -34,6 +34,9 @@ class Profile extends Model
         'hero_image_mime',
         'about_image_blob',
         'about_image_mime',
+        'primary_color',
+        'secondary_color',
+        'accent_color',
     ];
 
     /**

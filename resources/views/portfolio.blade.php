@@ -19,6 +19,24 @@
     }
   </style>
   @endif
+
+  <!-- Kustomisasi Warna Tema Dinamis dari Database (Rule 5, 6, & 19) -->
+  <style>
+    :root {
+      @if(!empty($profile->primary_color))
+        --primary: {{ $profile->primary_color }};
+        --primary-rgb: {{ hex_to_rgb($profile->primary_color) }};
+      @endif
+      @if(!empty($profile->secondary_color))
+        --secondary: {{ $profile->secondary_color }};
+        --secondary-rgb: {{ hex_to_rgb($profile->secondary_color) }};
+      @endif
+      @if(!empty($profile->accent_color))
+        --accent: {{ $profile->accent_color }};
+        --accent-rgb: {{ hex_to_rgb($profile->accent_color) }};
+      @endif
+    }
+  </style>
 </head>
 
 <body>

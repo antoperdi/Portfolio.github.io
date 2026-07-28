@@ -28,7 +28,80 @@ class AdminController extends Controller
             'message_count'    => DB::table('messages')->count(),
         ];
 
-        return view('admin.dashboard', compact('stats'));
+        // Mengambil profil untuk data kustomisasi warna
+        $profile = Profile::first();
+
+        return view('admin.dashboard', compact('stats', 'profile'));
+    }
+
+    /**
+     * Memperbarui kustomisasi warna tema dinamis (primary, secondary, accent) di database MySQL.
+     * Jika request mengandung reset, warna akan dikembalikan ke nilai NULL (default).
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function updateThemeColors(Request $request)
+    {
+        // Pengecekan hak akses admin (Rule 15 & 17)
+        if (!auth()->check()) {
+            log_message('error', 'Security Alert: Percobaan modifikasi warna tema tanpa autentikasi.');
+            return response()->json(['success' => false, 'message' => 'Akses ditolak.'], 403);
+        }
+
+        // Validasi input warna berupa kode HEX valid (Rule 13)
+        $validator = Validator::make($request->all(), [
+            'primary_color'   => 'nullable|string|regex:/^#[a-fA-F0-9]{6}$/',
+            'secondary_color' => 'nullable|string|regex:/^#[a-fA-F0-9]{6}$/',
+            'accent_color'    => 'nullable|string|regex:/^#[a-fA-F0-9]{6}$/',
+            'reset'           => 'nullable|boolean',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validasi gagal. Pastikan format warna adalah kode HEX valid (misal: #293681).'
+            ], 422);
+        }
+
+        try {
+            $profile = Profile::first();
+            if (!$profile) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Profil tidak ditemukan.'
+                ], 404);
+            }
+
+            if ($request->input('reset')) {
+                // Reset warna tema ke NULL (kembali ke default CSS)
+                $profile->primary_color = null;
+                $profile->secondary_color = null;
+                $profile->accent_color = null;
+            } else {
+                // Perbarui warna sesuai input
+                $profile->primary_color = $request->input('primary_color');
+                $profile->secondary_color = $request->input('secondary_color');
+                $profile->accent_color = $request->input('accent_color');
+            }
+
+            $profile->save();
+
+            return response()->json([
+                'success' => true,
+                'message' => $request->input('reset') 
+                    ? 'Warna tema berhasil direset ke pengaturan default CSS!' 
+                    : 'Warna tema portofolio berhasil diperbarui!'
+            ]);
+
+        } catch (\Exception $e) {
+            log_message('error', 'Error: Gagal memperbarui warna tema. Pesan: ' . $e->getMessage());
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan sistem saat memperbarui warna tema.'
+            ], 500);
+        }
     }
 
     /**

@@ -84,6 +84,9 @@ class PortfolioController extends Controller
         // Cari proyek berdasarkan ID di tabel Project_Saya menggunakan Eloquent
         $project = ProjectSaya::find($projectId);
 
-        return view('project-detail', compact('project'));
+        // Ambil data profil untuk custom warna tema di halaman detail (Rule 5 & 14)
+        $profile = Profile::first();
+
+        return view('project-detail', compact('project', 'profile'));
     }
 }
