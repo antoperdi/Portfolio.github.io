@@ -7,6 +7,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Profile;
 use App\Models\MyGallery;
 use App\Models\ProjectSaya;
+use App\Models\SocialLink;
+use App\Models\Education;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -31,7 +33,13 @@ class AdminController extends Controller
         // Mengambil profil untuk data kustomisasi warna
         $profile = Profile::first();
 
-        return view('admin.dashboard', compact('stats', 'profile'));
+        // Mengambil data link sosial media (Rule 5 & 12)
+        $socialLinks = SocialLink::orderBy('order_num', 'asc')->get();
+
+        // Mengambil data riwayat pendidikan (Rule 5 & 12)
+        $educationsList = Education::all();
+
+        return view('admin.dashboard', compact('stats', 'profile', 'socialLinks', 'educationsList'));
     }
 
     /**
@@ -671,6 +679,251 @@ class AdminController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Terjadi kesalahan sistem saat menghapus data proyek.'
+            ], 500);
+        }
+    }
+
+    /**
+     * Memproses penyimpanan data link sosial media baru (Insert) atau pembaruan (Update) secara asinkron.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function simpanSocialLink(Request $request)
+    {
+        // Pengecekan hak akses autentikasi (Rule 15 & 17)
+        if (!auth()->check()) {
+            log_message('error', 'Security Alert: Percobaan menyimpan data link sosial media tanpa autentikasi.');
+            return response()->json(['success' => false, 'message' => 'Akses ditolak.'], 403);
+        }
+
+        // Validasi input masukan secara ketat (Rule 13)
+        $validator = Validator::make($request->all(), [
+            'id'              => 'nullable|integer',
+            'name'            => 'required|string|max:100',
+            'url'             => 'required|string|max:255',
+            'predefined_icon' => 'nullable|string|max:100',
+            'icon_file'       => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
+            'order_num'       => 'required|integer|min:0',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validasi gagal. Pastikan semua data terisi dengan format yang benar.'
+            ], 422);
+        }
+
+        try {
+            $id = $request->input('id');
+            $name = $request->input('name');
+            $url = $request->input('url');
+            $orderNum = intval($request->input('order_num'));
+            
+            $socialLink = null;
+            $oldIconPath = null;
+
+            if ($id) {
+                // Proses Edit/Update (Rule 15 - pastikan ID ada)
+                $socialLink = SocialLink::find($id);
+                if (!$socialLink) {
+                    return response()->json(['success' => false, 'message' => 'Data link sosial media tidak ditemukan.'], 404);
+                }
+                $oldIconPath = $socialLink->icon_path;
+            } else {
+                // Proses Insert baru
+                $socialLink = new SocialLink();
+            }
+
+            // Tentukan path ikon
+            $iconPath = $oldIconPath;
+
+            if ($request->hasFile('icon_file')) {
+                // Hapus berkas lama jika merupakan berkas unggahan kustom (menyimpan di storage)
+                if ($oldIconPath && str_starts_with($oldIconPath, 'social_icons/') && \Illuminate\Support\Facades\Storage::disk('public')->exists($oldIconPath)) {
+                    \Illuminate\Support\Facades\Storage::disk('public')->delete($oldIconPath);
+                }
+                // Simpan berkas baru
+                $file = $request->file('icon_file');
+                $path = $file->store('social_icons', 'public');
+                $iconPath = $path;
+            } elseif ($request->filled('predefined_icon')) {
+                // Gunakan ikon bawaan
+                $iconPath = $request->input('predefined_icon');
+                
+                // Hapus berkas lama jika merupakan berkas unggahan kustom
+                if ($oldIconPath && str_starts_with($oldIconPath, 'social_icons/') && \Illuminate\Support\Facades\Storage::disk('public')->exists($oldIconPath)) {
+                    \Illuminate\Support\Facades\Storage::disk('public')->delete($oldIconPath);
+                }
+            }
+
+            $socialLink->name = $name;
+            $socialLink->url = $url;
+            $socialLink->icon_path = $iconPath;
+            $socialLink->order_num = $orderNum;
+            $socialLink->save();
+
+            return response()->json([
+                'success' => true,
+                'message' => $id ? 'Link sosial media berhasil diperbarui!' : 'Link sosial media baru berhasil ditambahkan!'
+            ]);
+
+        } catch (\Exception $e) {
+            log_message('error', 'Error: Gagal menyimpan data link sosial media. Pesan: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan sistem saat menyimpan data link sosial media.'
+            ], 500);
+        }
+    }
+
+    /**
+     * Memproses penghapusan data link sosial media secara asinkron.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function hapusSocialLink($id)
+    {
+        // Pengecekan hak akses autentikasi (Rule 15 & 17)
+        if (!auth()->check()) {
+            log_message('error', 'Security Alert: Percobaan menghapus data link sosial media tanpa autentikasi.');
+            return response()->json(['success' => false, 'message' => 'Akses ditolak.'], 403);
+        }
+
+        try {
+            $socialLink = SocialLink::find($id);
+
+            if (!$socialLink) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Data link sosial media tidak ditemukan.'
+                ], 404);
+            }
+
+            // Hapus ikon fisik jika merupakan berkas kustom (disimpan di storage)
+            if ($socialLink->icon_path && str_starts_with($socialLink->icon_path, 'social_icons/') && \Illuminate\Support\Facades\Storage::disk('public')->exists($socialLink->icon_path)) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($socialLink->icon_path);
+            }
+
+            $socialLink->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Link sosial media berhasil dihapus!'
+            ]);
+
+        } catch (\Exception $e) {
+            log_message('error', 'Error: Gagal menghapus link sosial media ID ' . $id . '. Pesan: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan sistem saat menghapus data link sosial media.'
+            ], 500);
+        }
+    }
+
+    /**
+     * Memproses penyimpanan data riwayat pendidikan baru (Insert) atau pembaruan (Update) secara asinkron.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function simpanEducation(Request $request)
+    {
+        // Pengecekan hak akses autentikasi (Rule 15 & 17)
+        if (!auth()->check()) {
+            log_message('error', 'Security Alert: Percobaan menyimpan data riwayat pendidikan tanpa autentikasi.');
+            return response()->json(['success' => false, 'message' => 'Akses ditolak.'], 403);
+        }
+
+        // Validasi input secara ketat (Rule 13)
+        $validator = Validator::make($request->all(), [
+            'id'          => 'nullable|integer',
+            'institution' => 'required|string|max:255',
+            'degree'      => 'required|string|max:50',
+            'major'       => 'required|string|max:100',
+            'period'      => 'required|string|max:100',
+            'url'         => 'nullable|string|max:255',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validasi gagal. Pastikan semua data terisi dengan benar.'
+            ], 422);
+        }
+
+        try {
+            $id = $request->input('id');
+            
+            if ($id) {
+                // Proses Edit/Update (Rule 15)
+                $education = Education::find($id);
+                if (!$education) {
+                    return response()->json(['success' => false, 'message' => 'Data riwayat pendidikan tidak ditemukan.'], 404);
+                }
+            } else {
+                // Proses Insert baru
+                $education = new Education();
+            }
+
+            $education->institution = $request->input('institution');
+            $education->degree = $request->input('degree');
+            $education->major = $request->input('major');
+            $education->period = $request->input('period');
+            $education->url = $request->input('url');
+            $education->save();
+
+            return response()->json([
+                'success' => true,
+                'message' => $id ? 'Riwayat pendidikan berhasil diperbarui!' : 'Riwayat pendidikan baru berhasil ditambahkan!'
+            ]);
+
+        } catch (\Exception $e) {
+            log_message('error', 'Error: Gagal menyimpan data riwayat pendidikan. Pesan: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan sistem saat menyimpan data riwayat pendidikan.'
+            ], 500);
+        }
+    }
+
+    /**
+     * Memproses penghapusan data riwayat pendidikan secara asinkron.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function hapusEducation($id)
+    {
+        // Pengecekan hak akses autentikasi (Rule 15 & 17)
+        if (!auth()->check()) {
+            log_message('error', 'Security Alert: Percobaan menghapus data riwayat pendidikan tanpa autentikasi.');
+            return response()->json(['success' => false, 'message' => 'Akses ditolak.'], 403);
+        }
+
+        try {
+            $education = Education::find($id);
+
+            if (!$education) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Data riwayat pendidikan tidak ditemukan.'
+                ], 404);
+            }
+
+            $education->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Riwayat pendidikan berhasil dihapus!'
+            ]);
+
+        } catch (\Exception $e) {
+            log_message('error', 'Error: Gagal menghapus riwayat pendidikan ID ' . $id . '. Pesan: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan sistem saat menghapus data riwayat pendidikan.'
             ], 500);
         }
     }

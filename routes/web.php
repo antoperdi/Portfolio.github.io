@@ -92,6 +92,18 @@ Route::group(['prefix' => 'portal-admin'], function () {
         // Proses Hapus Project Saya via AJAX (Project_Saya)
         Route::delete('/kelola-proyek/delete/{id}', [AdminController::class, 'deleteProject'])->name('admin.delete_project');
         
+        // Proses Simpan/Edit Link Sosial Media via AJAX (Rule 5)
+        Route::post('/social-links/simpan', [AdminController::class, 'simpanSocialLink'])->name('admin.simpan_social_link');
+
+        // Proses Hapus Link Sosial Media via AJAX (Rule 5)
+        Route::delete('/social-links/delete/{id}', [AdminController::class, 'hapusSocialLink'])->name('admin.hapus_social_link');
+
+        // Proses Simpan/Edit Riwayat Pendidikan via AJAX (Rule 5)
+        Route::post('/education/simpan', [AdminController::class, 'simpanEducation'])->name('admin.simpan_education');
+
+        // Proses Hapus Riwayat Pendidikan via AJAX (Rule 5)
+        Route::delete('/education/delete/{id}', [AdminController::class, 'hapusEducation'])->name('admin.hapus_education');
+        
         // Proses Keluar (Logout)
         Route::get('/logout', [AuthController::class, 'logout'])->name('admin.logout');
     });

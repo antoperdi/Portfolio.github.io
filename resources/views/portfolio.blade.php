@@ -161,8 +161,9 @@
                 </div>
                 <h4>Pendidikan</h4>
                 <p>{{ html_escape($edu->degree) }} {{ html_escape($edu->major) }}<br>{{ html_escape($edu->institution) }} ({{ html_escape($edu->period) }})</p>
+                @if(!empty($edu->url))
                 <div class="card-action-links">
-                  <a href="https://www.atmaluhur.ac.id/" target="_blank" rel="noopener" class="btn-card-action">
+                  <a href="{{ $edu->url }}" target="_blank" rel="noopener" class="btn-card-action">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                       stroke-linecap="round" stroke-linejoin="round">
                       <circle cx="12" cy="12" r="10"></circle>
@@ -171,9 +172,10 @@
                         d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z">
                       </path>
                     </svg>
-                    Web Kampus
+                    Tautan Web
                   </a>
                 </div>
+                @endif
               </div>
               @endforeach
             </div>
@@ -371,18 +373,15 @@
 
             <!-- Sosial Media Link -->
             <div class="social-links">
-              <a href="https://github.com/" class="social-icon" aria-label="GitHub">
-                <img src="{{ asset('foto_pribadi/github.png') }}" alt="Github" width="20" height="20" style="object-fit: contain;">
-              </a>
-              <a href="#" class="social-icon" aria-label="LinkedIn">
-                <img src="{{ asset('foto_pribadi/linkedin.png') }}" alt="Linkedin" width="20" height="20" style="object-fit: contain;">
-              </a>
-              <a href="https://www.instagram.com/rhqmat_?igsh=MWM5MGdmaTc5aG1kMA==" class="social-icon" aria-label="Instagram">
-                <img src="{{ asset('foto_pribadi/instagram.png') }}" alt="Instagram" width="20" height="20" style="object-fit: contain;">
-              </a>
-              <a href="https://youtube.com/@rakhmatperdianto7616?si=sywZYvvMX5NpZPnY" class="social-icon" aria-label="Youtube">
-                <img src="{{ asset('foto_pribadi/youtube.png') }}" alt="Youtube" width="20" height="20" style="object-fit: contain;">
-              </a>
+              @foreach($socialLinks as $link)
+                @php
+                  $isPredefined = str_starts_with($link->icon_path, 'foto_pribadi/');
+                  $iconUrl = $isPredefined ? asset($link->icon_path) : asset('storage/' . $link->icon_path);
+                @endphp
+                <a href="{{ $link->url }}" class="social-icon" aria-label="{{ html_escape($link->name) }}" target="_blank">
+                  <img src="{{ $iconUrl }}" alt="{{ html_escape($link->name) }}" width="20" height="20" style="object-fit: contain;">
+                </a>
+              @endforeach
             </div>
           </div>
 

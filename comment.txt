@@ -503,3 +503,50 @@ XIX. OPTIMASI DESAIN RESPONSIF LAYAR MOBILE PADA KELOLA KEAHLIAN (2026-08-01)
    - Mengurangi padding modal card (.modal-content-card) pada perangkat kecil agar isi form tidak terpotong.
    - Menambahkan media query CSS (@media (max-width: 576px)) untuk membuat tombol "Tambah Keahlian" berukuran lebar penuh (width: 100%) dan mengecilkan min-width progress bar demi keterbacaan yang optimal.
 ========================================================================
+
+========================================================================
+XX. FITUR CRUD SOSIAL MEDIA LINK (2026-08-01)
+========================================================================
+1. Tabel & Database Migrasi:
+   - database/migrations/2026_08_01_000000_create_social_links_table.php: Membuat tabel `social_links` dengan kolom `id`, `name`, `url`, `icon_path`, `order_num`, serta timestamps. Dilengkapi seeder data awal untuk GitHub, LinkedIn, Instagram, dan YouTube.
+
+2. Model (app/Models/SocialLink.php):
+   - Model `SocialLink` mewakili tabel `social_links` dengan atribut fillable: name, url, icon_path, dan order_num. Dilengkapi proteksi BASEPATH.
+
+3. Rute Baru (routes/web.php):
+   - Route::post('/social-links/simpan') : Rute simpan/edit link sosial media via AJAX POST.
+   - Route::delete('/social-links/delete/{id}') : Rute hapus link sosial media via AJAX DELETE.
+
+4. Controller Admin (app/Http/Controllers/AdminController.php):
+   - index() : Diperbarui untuk memuat data `$socialLinks` yang diurutkan berdasarkan `order_num` secara menaik untuk dilewatkan ke view dashboard admin.
+   - simpanSocialLink() : Metode asinkron baru untuk validasi input (Rule 13), pemrosesan unggah berkas ikon kustom, dan penyimpanan data baru/edit secara aman (Rule 15).
+   - hapusSocialLink() : Metode asinkron baru untuk memvalidasi hak akses dan menghapus tautan sosial media serta menghapus ikon fisik kustom di storage jika ada (Rule 15).
+
+5. Controller Portfolio (app/Http/Controllers/PortfolioController.php):
+   - index() : Diperbarui untuk mengambil data link sosial media dinamis dari database MySQL dan meneruskannya ke view portfolio utama.
+
+6. File View Blade:
+   - admin/dashboard.blade.php: Menambahkan Card "Kelola Link Sosial Media" di bagian paling atas sebelum Ringkasan Statistik. Dilengkapi tabel dengan `overflow-x: auto` (Rule 6 & 8) dan AJAX jQuery untuk interaksi tambah, edit, dan hapus asinkron tanpa reload (Rule 5).
+   - portfolio.blade.php: Menampilkan link sosial media secara dinamis dengan me-looping data `$socialLinks` menggunakan escaping `html_escape()` untuk perlindungan XSS (Rule 14 & 19).
+========================================================================
+XXI. FITUR CRUD RIWAYAT PENDIDIKAN (2026-08-01)
+========================================================================
+1. Tabel & Database Migrasi:
+   - database/migrations/2026_08_01_010000_add_url_to_educations_table.php: Membuat migrasi untuk menambahkan kolom `url` (VARCHAR 255, nullable) ke tabel `educations`.
+
+2. Model (app/Models/Education.php):
+   - Model `Education` mewakili tabel `educations` dengan atribut fillable: institution, degree, major, period, dan url. Dilengkapi dengan proteksi BASEPATH dan public $timestamps = false.
+
+3. Rute Baru (routes/web.php):
+   - Route::post('/education/simpan') : Rute simpan/edit riwayat pendidikan via AJAX POST.
+   - Route::delete('/education/delete/{id}') : Rute hapus riwayat pendidikan via AJAX DELETE.
+
+4. Controller Admin (app/Http/Controllers/AdminController.php):
+   - index() : Diperbarui untuk memuat data `$educationsList` untuk dilewatkan ke view dashboard admin.
+   - simpanEducation() : Metode asinkron baru untuk validasi input (Rule 13) dan memproses aksi Insert/Update ke tabel `educations`.
+   - hapusEducation() : Metode asinkron baru untuk memvalidasi hak akses dan menghapus riwayat pendidikan (Rule 15).
+
+5. File View Blade:
+   - admin/dashboard.blade.php: Menambahkan Card "Kelola Riwayat Pendidikan" di bawah bagian Sosial Media Link. Dilengkapi tabel dengan `overflow-x: auto` (Rule 6 & 8) dan AJAX jQuery untuk interaksi CRUD asinkron tanpa reload (Rule 5).
+   - portfolio.blade.php: Menampilkan riwayat pendidikan secara dinamis dan tombol tautan web instansi pendidikan secara kondisional menggunakan `url` baru.
+========================================================================

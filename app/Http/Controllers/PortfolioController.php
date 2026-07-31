@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Profile;
 use App\Models\MyGallery;
 use App\Models\ProjectSaya;
+use App\Models\SocialLink;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -51,6 +52,9 @@ class PortfolioController extends Controller
         // Mengambil seluruh data proyek dari tabel Project_Saya
         $projects = ProjectSaya::all();
 
+        // Mengambil data link sosial media (Rule 5 & 12)
+        $socialLinks = SocialLink::orderBy('order_num', 'asc')->get();
+
         // Mengelompokkan skill berdasarkan kategori untuk memudahkan render tabel di view
         $groupedSkills = [];
         foreach ($skills as $skill) {
@@ -67,7 +71,8 @@ class PortfolioController extends Controller
             'certifications',
             'myGalleries',
             'backgroundImage',
-            'projects'
+            'projects',
+            'socialLinks'
         ));
     }
 
