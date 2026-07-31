@@ -255,6 +255,115 @@
   .modal-overlay.open .modal-content-card {
     transform: scale(1);
   }
+
+  /* Media Query untuk Tampilan Mobile Friendly */
+  @media (max-width: 768px) {
+    .table-container {
+      background: transparent;
+      border: none;
+      box-shadow: none;
+      border-radius: 0;
+      margin-top: 15px;
+    }
+
+    /* Sembunyikan header tabel di mobile */
+    .skills-admin-table thead {
+      display: none;
+    }
+
+    /* Ubah elemen tabel menjadi display block */
+    .skills-admin-table, 
+    .skills-admin-table tbody, 
+    .skills-admin-table tr, 
+    .skills-admin-table td {
+      display: block;
+      width: 100%;
+    }
+
+    /* Rancang setiap baris tabel sebagai sebuah card terpisah */
+    .skills-admin-table tr {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      margin-bottom: 20px;
+      padding: 15px 20px;
+      box-shadow: var(--box-shadow);
+      transition: transform 0.3s, border-color 0.3s;
+    }
+
+    .skills-admin-table tr:hover {
+      background: rgba(255, 255, 255, 0.06);
+      border-color: rgba(66, 116, 217, 0.3);
+      transform: translateY(-2px);
+    }
+
+    /* Baris terakhir tidak memiliki style margin khusus jika berada di daftar */
+    .skills-admin-table tr:last-child {
+      margin-bottom: 0;
+    }
+
+    /* Layout kolom tabel di mobile menggunakan flexbox */
+    .skills-admin-table td {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 0 !important;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      text-align: right;
+    }
+
+    .skills-admin-table td:last-child {
+      border-bottom: none;
+      padding-top: 18px !important;
+      padding-bottom: 5px !important;
+    }
+
+    /* Tampilkan label kolom di sisi kiri secara otomatis dari atribut data-label */
+    .skills-admin-table td[data-label]::before {
+      content: attr(data-label);
+      font-weight: 700;
+      color: var(--accent);
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      letter-spacing: 1px;
+      text-align: left;
+    }
+
+    /* Penyesuaian lebar progress bar di mobile */
+    .level-progress-wrapper {
+      min-width: 160px;
+      justify-content: flex-end;
+    }
+
+    /* Tombol Aksi di mobile agar terpusat rapi */
+    .skills-admin-table td[data-label="Aksi"] {
+      justify-content: flex-end;
+      gap: 12px;
+    }
+
+    .skills-admin-table td[data-label="Aksi"]::before {
+      margin-right: auto;
+    }
+
+    /* Kurangi padding modal pada layar kecil agar tidak sesak */
+    .modal-content-card {
+      padding: 24px 20px;
+      border-radius: 16px;
+    }
+  }
+
+  @media (max-width: 576px) {
+    /* Penyesuaian layout tombol Tambah Keahlian agar penuh pada layar sangat kecil */
+    .btn-add-skill-theme {
+      width: 100%;
+    }
+
+    /* Progress bar agar lebih responsif di layar di bawah 576px */
+    .level-progress-wrapper {
+      min-width: 120px;
+      gap: 8px;
+    }
+  }
 </style>
 @endsection
 
@@ -292,12 +401,12 @@
         @forelse($skills as $index => $skill)
         <tr>
           <!-- Escaping keluaran di View (Rule 14 & 19) -->
-          <td style="font-weight: 600; color: var(--light);">{{ $index + 1 }}</td>
-          <td style="font-weight: 500;">{{ html_escape($skill->name) }}</td>
-          <td>
+          <td data-label="No" style="font-weight: 600; color: var(--light);">{{ $index + 1 }}</td>
+          <td data-label="Nama Keahlian" style="font-weight: 500;">{{ html_escape($skill->name) }}</td>
+          <td data-label="Kategori">
             <span class="badge-category">{{ html_escape($skill->category) }}</span>
           </td>
-          <td>
+          <td data-label="Tingkat Penguasaan">
             <div class="level-progress-wrapper">
               <div class="level-bar-bg">
                 <div class="level-bar-fill" style="width: {{ intval($skill->percentage) }}%;"></div>
@@ -305,7 +414,7 @@
               <span class="level-percentage">{{ html_escape($skill->percentage) }}%</span>
             </div>
           </td>
-          <td style="text-align: center;">
+          <td data-label="Aksi" style="text-align: center;">
             <div style="display: flex; gap: 10px; justify-content: center;">
               <button type="button" class="btn-edit-skill" data-id="{{ $skill->id }}" data-name="{{ $skill->name }}" data-category="{{ $skill->category }}" data-percentage="{{ $skill->percentage }}">
                 Edit

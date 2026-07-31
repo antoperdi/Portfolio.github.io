@@ -492,6 +492,14 @@ XVIII. FITUR CRUD ASINKRON KELOLA KEAHLIAN (2026-07-28)
    - Mengintegrasikan jQuery AJAX asinkron untuk menyimpan data baru/perubahan, memicu reload data, serta menghapus data baris keahlian secara instan tanpa reload halaman (Rule 5).
 ========================================================================
 
-
-
-
+========================================================================
+XIX. OPTIMASI DESAIN RESPONSIF LAYAR MOBILE PADA KELOLA KEAHLIAN (2026-08-01)
+========================================================================
+1. File View Blade (admin/kelola_keahlian.blade.php):
+   - Menambahkan atribut data-label pada setiap tag <td> di dalam tabel keahlian untuk menampilkan label di mobile (No, Nama Keahlian, Kategori, Tingkat Penguasaan, Aksi).
+   - Menambahkan media query CSS (@media (max-width: 768px)) untuk merombak visual tabel menjadi model card terpisah yang fully responsive.
+   - Menambahkan penyesuaian CSS untuk menyembunyikan header tabel bawaan (thead) di mobile, menyusun baris tabel (tr) menjadi card terpisah dengan border-radius 16px dan transisi hover yang halus.
+   - Mengatur flexbox pada td di mobile untuk mensejajarkan label data-label di sisi kiri dengan nilai data di sisi kanan secara seimbang.
+   - Mengurangi padding modal card (.modal-content-card) pada perangkat kecil agar isi form tidak terpotong.
+   - Menambahkan media query CSS (@media (max-width: 576px)) untuk membuat tombol "Tambah Keahlian" berukuran lebar penuh (width: 100%) dan mengecilkan min-width progress bar demi keterbacaan yang optimal.
+========================================================================
